@@ -1,0 +1,23 @@
+{% include 'partials/header.html' %}
+
+<center>
+<h4>Register:</h4>
+<form style="width:400px; background-color: #F8F8F8; margin-top:10px;" action="{% url 'register' %}" method="post">
+{% csrf_token %}
+  
+  <input style="margin-top: 15px; width:370px;" type="text" name="uname" id="uname" placeholder="Username.." /><br>
+
+  <input style="width:370px;" type="text" name="fname" id="fname" placeholder="First Name" /><br>
+
+  <input style="width:370px;" type="text" name="lname" id="lname" placeholder="Last Name" /><br>
+
+  <input style="width:370px;" type="text" name="email" id="email" placeholder="Email" /><br>
+  
+  <input style="width:370px;" type="password" name="password" id="password" placeholder="Password.." /><br>
+
+  <input class="btn" style="margin-bottom: 15px;" type="submit" value="Submit">
+
+</form>
+</center>
+<br>
+{% include 'partials/footer.html' %}

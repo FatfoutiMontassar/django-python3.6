@@ -1,0 +1,68 @@
+<!-- Sidebar ================================================== -->
+{% load static %}
+
+<div id="sidebar" class="span3">
+		<div class="well well-small"><a id="myCart" href="product_summary.html"><img src="{% static 'themes/images/ico-cart.png' %}" alt="cart">3 Items in your cart  <span class="badge badge-warning pull-right">155.00 Dt</span></a></div>
+		<ul id="sideManu" class="nav nav-tabs nav-stacked">
+			{% if idC == "1" %}
+			<li ><a href="/shop/discovermore/1/1/" style="color:grey; font-size:15px;">Vétement et accessoires</a></li>
+			{% else %}
+			<li ><a href="/shop/discovermore/1/1/">Vétement et accessoires</a></li>
+			{% endif %}
+
+			{% if idC == "2" %}
+			<li ><a href="/shop/discovermore/2/1/" style="color:grey; font-size:15px;">Bijoux</a></li>
+			{% else %}
+			<li ><a href="/shop/discovermore/2/1/">Bijoux</a></li>
+			{% endif %}
+
+			{% if idC == "3" %}
+			<li ><a href="/shop/discovermore/3/1/" style="color:grey; font-size:15px;">Founiture créatives</a></li>
+			{% else %}
+			<li ><a href="/shop/discovermore/3/1/">Founiture créatives</a></li>
+			{% endif %}
+
+			{% if idC == "4" %}
+			<li ><a href="/shop/discovermore/4/1/" style="color:grey; font-size:15px;">Mariages</a></li>
+			{% else %}
+			<li ><a href="/shop/discovermore/4/1/">Mariages</a></li>
+			{% endif %}
+
+			{% if idC == "5" %}
+			<li ><a href="/shop/discovermore/5/1/" style="color:grey; font-size:15px;">Maison</a></li>
+			{% else %}
+			<li ><a href="/shop/discovermore/5/1/">Maison</a></li>
+			{% endif %}
+
+			{% if idC == "6" %}
+			<li ><a href="/shop/discovermore/6/1/" style="color:grey; font-size:15px;">Enfant et bébé</a></li>
+			{% else %}
+			<li ><a href="/shop/discovermore/6/1/">Enfant et bébé</a></li>
+			{% endif %}
+
+		</ul>
+		<br/>
+		<div class="well well-small" style="height:38px;"><a href="#"><h5><strong>Best Sales:</strong></h5></a></div>
+		  <div class="thumbnail">
+			<img src="{% static 'themes/images/products/panasonic.jpg' %}" alt="Bootshop panasonoc New camera"/>
+			<div class="caption">
+			  <h5>Panasonic</h5>
+				<h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" >222.00 Dt</a></h4>
+			</div>
+		  </div><br/>
+			<div class="thumbnail">
+				<img src="{% static 'themes/images/products/kindle.png' %}" title="Bootshop New Kindel" alt="Bootshop Kindel">
+				<div class="caption">
+				  <h5>Kindle</h5>
+				    <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary">$222.00 Dt</a></h4>
+				</div>
+			  </div><br/>
+
+			<div class="thumbnail">
+				<img src="{% static 'themes/images/payment_methods.png' %}" title="Bootshop Payment Methods" alt="Payments Methods">
+				<div class="caption">
+				  <h5>Méthodes de paiement</h5>
+				</div>
+			  </div>
+	</div>
+<!-- Sidebar end=============================================== -->

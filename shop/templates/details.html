@@ -1,0 +1,69 @@
+{% include 'partials/header.html' %}
+
+{% load static %}
+
+<center style="margin-top:25px;">
+		<img src="{{store.img.url}}" style="height:300px;">
+</center>
+
+{% if user.id == store.user.id %}
+<center style="margin-top:10px; margin-bottom:10px;">
+	<h4><a class="btn" href="/shop/product_create/{{store.id}}">Add Product</a></h4>
+</center>
+<br>
+{% else %}
+<br><br>
+{% endif %}
+
+
+<div id="mainBody">
+	<div class="container">
+	<div class="row">
+
+<!-- Sidebar ================================================== -->
+{% include 'partials/sidebar.html' %}
+<!-- Sidebar end=============================================== -->
+
+	<div class="span9">
+		<h4>Products:</h4>
+			  <ul class="thumbnails">
+
+				{% for product in products %}
+							<li class="span3">
+						  <div class="thumbnail" style="height:230px;">
+							<a  href="product_details.html"><img src="{{product.img.url}}" style="width:120px;height:120px;" alt=""/></a>
+							<div class="caption" style="bottom:0px; position: absolute; width:90%">
+							  <h5>{{product.name}}</h5>
+								<!--
+								<h5 style="margin-top:0;">is active : {{product.isActive}}</h5>
+								-->
+							 <center>
+							  <h4 style="text-align:center">
+									{% if product.isActive == True %}
+										<img src="{% static 'themes/images/active.png' %}" style="height:18px;" title="status">
+									{% elif product.isActive == False %}
+										<img src="{% static 'themes/images/notActive.png' %}" style="height:18px;" title="status">
+									{% else %}
+										<img src="{% static 'themes/images/notSure.png' %}" style="height:18px;" title="status">
+									{% endif %}
+									<a class="btn" href="/shop/product_details/{{product.id}}">VIEW</a>
+									<a class="btn btn-primary" href="">{{product.price}} Dt</a>
+									<a class="btn" href="#"><img src="{% static 'themes/images/editProduct.png' %}" style="height:18px;" title="Edit Product"></a>
+									<!--
+									<a class="btn" href="/shop/deleteProduct/{{product.id}}"><img src="{% static 'themes/images/removeElement.png' %}" style="height:18px;" title="Delete Product"></a>
+									-->
+								</h4>
+							 </center>
+							</div>
+						  </div>
+						</li>
+				{% endfor %}
+
+			  </ul>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+{% include 'partials/footer.html' %}

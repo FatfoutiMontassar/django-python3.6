@@ -1,0 +1,63 @@
+{% include 'partials/header.html' %}
+
+<div id="mainBody">
+<div class="container">
+	<hr class="soften">
+	<h1>Visit us</h1>
+	<hr class="soften"/>
+	<div class="row">
+		<div class="span4">
+		<h4>Contact Details</h4>
+		<p>	xx address,<br/> xx xxxxx, TN
+			<br/><br/>
+			example@example.com<br/>
+			﻿Tel 94-181-859<br/>
+			Fax xxx-xxx-xxxx<br/>
+			web:example.com
+		</p>
+		</div>
+
+		<div class="span4">
+		<h4>Opening Hours</h4>
+			<h5> Monday - Friday</h5>
+			<p>09:00am - 09:00pm<br/><br/></p>
+			<h5>Saturday</h5>
+			<p>09:00am - 07:00pm<br/><br/></p>
+			<h5>Sunday</h5>
+			<p>12:30pm - 06:00pm<br/><br/></p>
+		</div>
+		<div class="span4">
+		<h4>Email Us</h4>
+        <form class="form-horizontal" role="form" action="{% url 'contact_create' %}" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group" style="margin-top:10px;">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <span class="text-danger small">{{ field.errors }}</span>
+                    </div>
+                    <label for="contact_subject" style="display: inline-block; width: 220px; text-align:left;">{{ field.label_tag }}</label>
+                    <div class="col-sm-10">
+                      {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </div>
+        </form>
+		</div>
+	</div>
+	<div class="row">
+	<div class="span12">
+	<iframe style="width:100%; height:300; border: 0px" scrolling="no" src="https://maps.google.co.uk/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=18+California,+Fresno,+CA,+United+States&amp;aq=0&amp;oq=18+California+united+state&amp;sll=39.9589,-120.955336&amp;sspn=0.007114,0.016512&amp;ie=UTF8&amp;hq=&amp;hnear=18,+Fresno,+California+93727,+United+States&amp;t=m&amp;ll=36.732762,-119.695787&amp;spn=0.017197,0.100336&amp;z=14&amp;output=embed"></iframe><br />
+	<small><a href="https://maps.google.co.uk/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=18+California,+Fresno,+CA,+United+States&amp;aq=0&amp;oq=18+California+united+state&amp;sll=39.9589,-120.955336&amp;sspn=0.007114,0.016512&amp;ie=UTF8&amp;hq=&amp;hnear=18,+Fresno,+California+93727,+United+States&amp;t=m&amp;ll=36.732762,-119.695787&amp;spn=0.017197,0.100336&amp;z=14" style="color:#0000FF;text-align:left">View Larger Map</a></small>
+	</div>
+	</div>
+</div>
+</div>
+<!-- MainBody End ============================= -->
+
+
+{% include 'partials/footer.html' %}

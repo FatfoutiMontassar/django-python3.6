@@ -1,0 +1,23 @@
+{% include 'partials/header.html' %}
+
+<center><h4>Add Product To ** {{store.name}} **</h4></center>
+
+<center>
+<form style="width:400px; background-color: #F8F8F8; margin-top:10px;" action="{% url 'addProduct' id=store.id %}" method="post">
+{% csrf_token %}
+
+	<input style="margin-top: 15px; width:370px;" type="text" name="name" id="name" placeholder="Name" /><br>
+
+	<input style="width:370px;" type="number" step=".01" name="price" id="price" min="0.00" max="99999999.99" placeholder="Price" /><br>
+
+	<textarea style="width:370px; height: 150px; resize:vertical;" name="description" id="description" placeholder="Description"></textarea><br>
+
+	<input style="width:370px;" type="text" name="imgUrl" id="imgUrl" placeholder="Image Url" /><br>
+
+	<input class="btn" style="margin-bottom: 15px;" type="submit" value="Submit">
+
+</form>
+</center>
+<br>
+
+{% include 'partials/footer.html' %}

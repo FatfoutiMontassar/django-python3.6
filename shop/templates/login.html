@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+	<title>AliBaba</title>
+
+<!-- Bootstrap style -->
+    <link id="callCss" rel="stylesheet" href="{% static 'themes/bootshop/bootstrap.min.css' %}" media="screen"/>
+    <link href="{% static 'themes/css/base.css' %}" rel="stylesheet" media="screen"/>
+<!-- Bootstrap style responsive -->
+	<link href="{% static 'themes/css/bootstrap-responsive.min.css' %}" rel="stylesheet"/>
+	<link href="{% static 'themes/css/font-awesome.css' %}" rel="stylesheet" type="text/css">
+<!-- Google-code-prettify -->
+	<link href="{% static 'themes/js/google-code-prettify/prettify.css' %}" rel="stylesheet"/>
+<!-- fav and touch icons -->
+    <link rel="shortcut icon" href="{% static 'themes/images/ico/favicon.ico' %}">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'themes/images/ico/apple-touch-icon-144-precomposed.png' %}">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'themes/images/ico/apple-touch-icon-114-precomposed.png' %}">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'themes/images/ico/apple-touch-icon-72-precomposed.png' %}">
+    <link rel="apple-touch-icon-precomposed" href="{% static 'themes/images/ico/apple-touch-icon-57-precomposed.png' %}">
+		<style type="text/css" id="enject"></style>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  	<link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'>
+
+
+</head>
+<body>
+	<div id="header">
+<div class="container">
+<div id="welcomeLine" class="row">
+
+	{% if user.is_authenticated %}
+		<div class="span6">Welcome!<strong> {{user.username}}</strong></div>
+	{% else %}
+		<div class="span6">Welcome!</div>
+	{% endif %}
+
+	<div class="span6">
+	<div class="pull-right">
+		<a href="product_summary.html"><span class="">Fr</span></a>
+		<a href="product_summary.html"><span class="">Es</span></a>
+		<span class="btn btn-mini">En</span>
+		<a href="product_summary.html"><span>&pound;</span></a>
+		<span class="btn btn-mini">$155.00</span>
+		<a href="product_summary.html"><span class="">$</span></a>
+		<a href="product_summary.html"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [ 3 ] Itemes in your cart </span> </a>
+	</div>
+	</div>
+</div>
+<!-- Navbar ================================================== -->
+<div id="logoArea" class="navbar">
+<a id="smallScreen" data-target="#topMenu" data-toggle="collapse" class="btn btn-navbar">
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+</a>
+  <div class="navbar-inner">
+    <a class="brand" href="/shop"><img src="{% static 'themes/images/logo.png' %}" alt="Bootsshop"/></a>
+		<form class="form-inline navbar-search" method="post" action="products.html" >
+		<input id="srchFld" class="srchTxt" type="text" />
+		  <select class="srchTxt">
+			<option>All</option>
+			<option>CLOTHES </option>
+			<option>FOOD AND BEVERAGES </option>
+			<option>HEALTH & BEAUTY </option>
+			<option>SPORTS & LEISURE </option>
+			<option>BOOKS & ENTERTAINMENTS </option>
+		</select>
+		  <button type="submit" id="submitButton" class="btn btn-primary">Go</button>
+    </form>
+   <ul id="topMenu" class="nav pull-right">
+		 <li class=""><a href="/shop/contact_create">Contact</a></li>
+
+	 {% if user.is_authenticated %}
+	 	 <li class=""><a href="/shop/logout">Logout</a></li>
+	 {% else %}
+    <!--
+     <li class=""><a href="/shop/login">Login</a></li>
+		 <li class=""><a href="/shop/register">Register</a></li>
+   -->
+   {% endif %}
+
+   </ul>
+  </div>
+</div>
+</div>
+</div>
+<!-- Header End====================================================================== -->
+
+{% load static %}
+
+<!--
+<center>
+<h4>Login:</h4>
+<form style="width:400px; background-color: #F8F8F8; margin-top:10px; margin-bottom: 150px;" action="{% url 'login' %}" method="post">
+{% csrf_token %}
+
+  <input style="margin-top: 15px; width:370px;" type="text" name="username" id="username" placeholder="Username.." /><br>
+
+  <input style="width:370px;" type="password" name="password" id="password" placeholder="Password.." /><br>
+
+  <input class="btn" style="margin-bottom: 15px;" type="submit" value="Submit">
+
+</form>
+</center>
+<br>
+-->
+<link rel="stylesheet" href="{% static 'css/loginStyle.css' %}">
+
+<div class="login-box">
+    <div class="lb-header">
+      <a href="#" class="active" id="login-box-link">Login</a>
+      <a href="#" id="signup-box-link">Register</a>
+    </div>
+
+    <div class="social-login">
+      <a href="#">
+        <i class="fa fa-facebook fa-lg"></i>
+        Login in with facebook
+      </a>
+      <a href="#">
+        <i class="fa fa-google-plus fa-lg"></i>
+        log in with Google
+      </a>
+    </div>
+
+    <form class="email-login" action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <div class="u-form-group">
+        <input type="email" name="email" id="email" placeholder="Email"/>
+      </div>
+      <div class="u-form-group">
+        <input type="password" name="password" id="password" placeholder="Password"/>
+      </div>
+      <div class="u-form-group">
+        <button type="submit">Log in</button>
+      </div>
+      <div class="u-form-group">
+        <a href="#" class="forgot-password">Forgot password?</a>
+      </div>
+    </form>
+
+    <form class="email-signup" action="{% url 'register' %}" method="post">
+      {% csrf_token %}
+      <div class="u-form-group">
+        <input type="email" name="email" id="email" placeholder="Email"/>
+      </div>
+      <div class="u-form-group">
+        <input type="password" name="password" id="password" placeholder="Password"/>
+      </div>
+      <div class="u-form-group">
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password"/>
+      </div>
+      <div class="u-form-group">
+        <button type="submit" style="margin-bottom:50px;">Register</button>
+      </div>
+    </form>
+  </div>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+
+{% include 'partials/footer.html' %}
