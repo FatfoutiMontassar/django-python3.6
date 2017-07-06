@@ -1,30 +1,153 @@
 {% include 'partials/header.html' %}
-
+{% load static %}
 <div id="mainBody">
 	<div class="container">
 	<div class="row">
 
 <!-- Sidebar ================================================== -->
 {% include 'partials/sidebar.html' %}
-<!-- Sidebar end=============================================== -->
 
+</div>
+<!-- Sidebar end=============================================== -->
+<script>
+function myFunction() {
+    var x = document.getElementById('myDIV');
+		var y = document.getElementById('bshow');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+				y.style.display = 'none';
+    } else {
+        x.style.display = 'none';
+    }
+}
+function Edit() {
+    var x = document.getElementById('editForm');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+
+</script>
     <div class="span9" style=" maring:0">
-      <div class="span5" style="border: 2px solid black; maring:0;">
-        <img src="{{product.img.url}}" />
+
+			<div class="span5">
+				{% if img %}
+				<img src="/media/{{img.img}}" style="border: 1px solid black; maring:0; width:100%"/>
+				{% else %}
+				<img src="/media/default.jpg" style="border: 1px solid black; maring:0; width:100%"/>
+				{% endif %}
+
+
+				<button onclick="myFunction()" id="bshow">Changer l'image</button>
+				<div id="myDIV" style="display:none;">
+				<form action="{% url 'addProductMainImage' id=product.id %}" method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					{{ form.as_p }}
+					<input type="submit" value="Submit">
+				</form>
+				</div>
+				<br/>
+				<br/>
+
+			</div>
+
+			<div class="span3" style="maring:0;">
+				<div class="well well-small" >
+					<h5><strong>Name: </strong>{{product.name}}</h5>
+					<h5><strong>Price: </strong>{{product.price}}</h5>
+					<h5><strong>Quantity: </strong>{{product.quantity}}</h5>
+					<h5><strong>Store: </strong>{{product.store.name}}</h5>
+					<h5><strong>Categorie: </strong>{{product.categorie}}</h5>
+
+					<h5><strong>Description: </strong><br/>{{product.description}}</h5>
+				</div>
       </div>
+			<!--
       <div class="span3" style="display: table;">
         <img src="{{product.img1.url}}" style="height:70px;display: table-cell; border: 2px solid black;">
         <img src="{{product.img2.url}}" style="height:70px;display: table-cell; border: 2px solid black;">
         <img src="{{product.img3.url}}" style="height:70px;display: table-cell; border: 2px solid black;">
       </div>
-    </div>
+		-->
+		<!--
+		
+		<script  language="JavaScript" type="text/javascript">
+			function confirmDeletion(){
+				var ans = confirm("Are you sure that you want to delete this Product!!")
+				if(ans == true){
+					window.location = "/shop/deleteProduct/{{product.id}}";
+				}
+			}
+		</script>
+    <div class="span9">
+			<div class="span1">
+				<a class="btn" onclick="confirmDeletion()"><img src="{% static 'themes/images/removeElement.png' %}" style="height:18px;" title="Delete Product"></a>
+				supprimer
+			</div>
+			<div class="span1">
+				<a class="btn" href="/shop/duplicateProduct/{{product.id}}"><img src="{% static 'themes/images/duplicate.png' %}" style="height:18px;" title="Duplicate Product"></a>
+				dupliquer
+			</div>
+			<div class="span1">
+				<a class="btn" onclick="Edit()" >
+					<img src="{% static 'themes/images/editProduct.png' %}" style="height:18px;" title="Edit Product">
+				</a>
+				modifier
+			</div>
+			<div class="span1">
+				{% if product.isActive == True %}
+					<a class="btn" style="height:22px;" href="/shop/activateProduct/{{product.id}}">
+						<img src="{% static 'themes/images/active.png' %}" style="height:18px;" title="status">
+					</a>
+					Desactiver!
+					{% else %}
+					<a class="btn" style="height:22px;" href="/shop/activateProduct/{{product.id}}">
+						<img src="{% static 'themes/images/notActive.png' %}" style="height:18px;" title="status">
+					</a>
+					Activer!
 
-    <div class="span9" style="margin-top:50px;">
-      <div class="span5" style="maring:0;">
-        <h4>Description:</h4><br>
-        <h4>{{product.description}}</h4>
-      </div>
+				{% endif %}
+			</div>
+			<div class="span1">
+				<a class="btn" href="/shop/album/{{product.id}}"><img src="{% static 'themes/images/album.png' %}" style="height:18px;" title="Edit Album"></a>
+				Edit Album
+			</div>
+
+
+			<div class="span9" style="margin-top:50px;">
+				<div id="editForm" style="display:none;">
+				<h4>Edit Product :</h4>
+				<form class="form-horizontal" role="form" action="{% url 'editProduct' id=product.id %}" method="post">
+						{% csrf_token %}
+
+						{% for field in editProductForm %}
+								<div class="form-group" style="margin-top:10px;">
+										<div class="col-sm-offset-2 col-sm-10">
+												<span class="text-danger small">{{ field.errors }}</span>
+										</div>
+										<label for="product_title" style="display: inline-block; width: 220px; text-align:left;">
+											{{ field.label_tag }}
+										</label>
+										<div class="col-sm-10">
+											{{ field }}
+										</div>
+								</div>
+						{% endfor %}
+						<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-10" style="margin-top:30px;">
+										<button type="submit" class="btn btn-success">Save</button>
+								</div>
+						</div>
+				</form>
+			</div>
+			</div>
     </div>
+		-->
+
+
+
 
   </div>
 </div>

@@ -43,10 +43,6 @@
 		<a href="product_summary.html"><span class="">Fr</span></a>
 		<a href="product_summary.html"><span class="">Es</span></a>
 		<span class="btn btn-mini">En</span>
-		<a href="product_summary.html"><span>&pound;</span></a>
-		<span class="btn btn-mini">155.00 Dt</span>
-		<a href="product_summary.html"><span class="">$</span></a>
-		<a href="product_summary.html"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [ 3 ] Itemes in your cart </span> </a>
 	</div>
 	</div>
 </div>
@@ -59,18 +55,25 @@
 </a>
   <div class="navbar-inner">
     <a class="brand" href="/shop"><img src="{% static 'themes/images/logo.png' %}" alt="Bootsshop"/></a>
-		<form class="form-inline navbar-search" method="post" action="#" >
+		<form class="form-inline navbar-search" method="post" action="{% url 'search' %}" >
 			{% csrf_token %}
-		<input id="srchFld" class="srchTxt" type="text" />
-			<!--
-			<select class="srchTxt">
-			<option>All</option>
-			<option>CLOTHES </option>
-			<option>FOOD AND BEVERAGES </option>
-			<option>HEALTH & BEAUTY </option>
-			<option>SPORTS & LEISURE </option>
-			<option>BOOKS & ENTERTAINMENTS </option>
-		-->
+		{% if input %}
+			<input id="srchFld" name="srchFld" type="text" value="{{input}}" />
+		{% else %}
+			<input id="srchFld" name="srchFld" type="text" placeholder="Recherche.." />
+		{% endif %}
+
+
+			<select class="srchTxt" name="srchTxt">
+
+			<option>Tous les categories</option>
+
+			<option>Vétement et accessoires</option>
+			<option>Bijoux</option>
+			<option>Founiture créatives</option>
+			<option>Mariages</option>
+			<option>Maison</option>
+			<option>Enfant et bébé</option>
 		</select>
 		  <button type="submit" id="submitButton" class="btn btn-primary">Go</button>
     </form>

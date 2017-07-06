@@ -1,0 +1,82 @@
+{% include 'partials/header.html' %}
+
+{% load static %}
+
+<div id="mainBody">
+	<div class="container">
+	<div class="row">
+
+<!-- Sidebar ================================================== -->
+<!-- Sidebar ================================================== -->
+{% load static %}
+
+<div id="sidebar" class="span3">
+		<div class="well well-small"><strong>Recherche Par Categorie:</strong></div>
+		<ul id="sideManu" class="nav nav-tabs nav-stacked">
+			{% if idC == "1" %}
+			<li ><a href="/shop/search/categorieId=1/search={{input}}" style="color:grey; font-size:15px;">Vétement et accessoires [ {{nC1}} ]</a></li>
+			{% else %}
+			<li ><a href="/shop/search/categorieId=1/search={{input}}">Vétement et accessoires [ {{nC1}} ]</a></li>
+			{% endif %}
+
+			{% if idC == "2" %}
+			<li ><a href="/shop/search/categorieId=2/search={{input}}" style="color:grey; font-size:15px;">Bijoux [ {{nC2}} ]</a></li>
+			{% else %}
+			<li ><a href="/shop/search/categorieId=2/search={{input}}">Bijoux [ {{nC2}} ]</a></li>
+			{% endif %}
+
+			{% if idC == "3" %}
+			<li ><a href="/shop/search/categorieId=3/search={{input}}" style="color:grey; font-size:15px;">Founiture créatives [ {{nC3}} ]</a></li>
+			{% else %}
+			<li ><a href="/shop/search/categorieId=3/search={{input}}">Founiture créatives [ {{nC3}} ]</a></li>
+			{% endif %}
+
+			{% if idC == "4" %}
+			<li ><a href="/shop/search/categorieId=4/search={{input}}" style="color:grey; font-size:15px;">Mariages [ {{nC4}} ]</a></li>
+			{% else %}
+			<li ><a href="/shop/search/categorieId=4/search={{input}}">Mariages [ {{nC4}} ]</a></li>
+			{% endif %}
+
+			{% if idC == "5" %}
+			<li ><a href="/shop/search/categorieId=5/search={{input}}" style="color:grey; font-size:15px;">Maison [ {{nC5}} ]</a></li>
+			{% else %}
+			<li ><a href="/shop/search/categorieId=5/search={{input}}">Maison [ {{nC5}} ]</a></li>
+			{% endif %}
+
+			{% if idC == "6" %}
+			<li ><a href="/shop/search/categorieId=6/search={{input}}" style="color:grey; font-size:15px;">Enfant et bébé [ {{nC6}} ]</a></li>
+			{% else %}
+			<li ><a href="/shop/search/categorieId=6/search={{input}}">Enfant et bébé [ {{nC6}} ]</a></li>
+			{% endif %}
+
+		</ul>
+		<br/>
+<!-- Sidebar end=============================================== -->
+
+</div>
+<!-- Sidebar end=============================================== -->
+
+	<div class="span9" style="margin-bottom:80px;">
+	<h5>{{n}} results found</h5>
+		<div>
+	  {% for product , score , img in result %}
+		<div style="height:82px;">
+					<div style="float:left;height:82px; width:100px;border: 1px solid grey;">
+						<img src="/media/{{img.img}}" style="height:100%;display: block; margin-left: auto;margin-right: auto;" >
+					</div>
+					<div>
+						<h4 style="margin-top:20px; margin-left:120px;">
+							<a href="/shop/product_details/{{product.id}}" style="text-decoration:none; color: 	#1E90FF;">{{product.name}}</a>
+						</br>{{product.price}} Dt
+					</div>
+						</h4>
+		</div>
+			<hr/>
+		{% endfor %}
+		</div>
+	</div>
+	</div>
+  </div>
+</div>
+
+{% include 'partials/footer.html' %}

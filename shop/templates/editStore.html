@@ -1,0 +1,38 @@
+{% include 'partials/header.html' %}
+
+{% load static %}
+<div id="mainBody">
+	<div class="container">
+	<div class="row">
+
+<center>
+  <div class="span12" style="margin-top:50px;">
+    <h4>Edit Store :</h4>
+    <form class="form-horizontal" role="form" action="{% url 'editStore' id=store.id %}" method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-group" style="margin-top:10px;">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <span class="text-danger small">{{ field.errors }}</span>
+                </div>
+                <label for="product_title" style="display: inline-block; width: 220px; text-align:left;">
+                  {{ field.label_tag }}
+                </label>
+                <div class="col-sm-10">
+                  {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="margin-top:30px;">
+                <button type="submit" class="btn btn-success">Save</button>
+            </div>
+        </div>
+      </form>
+    </div>
+  </center>
+  </div>
+  </div>
+</div>
+{% include 'partials/footer.html' %}

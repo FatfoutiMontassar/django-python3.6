@@ -13,12 +13,21 @@ urlpatterns = [
 	url(r'^discover/$', views.discover , name='discover' ),
 	url(r'^discovermore/(?P<id>\w{0,50})/$', views.discovermore , name='discovermore' ),
 	url(r'^discovermore/(?P<idC>\w{0,50})/(?P<idP>\w{0,50})/$', views.categories , name='categories' ),
+	url(r'^detailsmore/(?P<idS>\w{0,50})/(?P<idP>\w{0,50})/$', views.detailsMore , name='detailsmore' ),
+	url(r'^search/$', views.search , name='search' ),
+	url(r'^search/categorieId=(?P<cId>\w{0,50})/search=(?P<input>[\w\-]+)/$', views.searchmore , name='search' ),
 	url(r'^stores',views.storesView , name='stores'),
 	url(r'^details/(?P<id>\w{0,50})/$',views.details),
+	url(r'^album/(?P<id>\w{0,50})/$',views.album),
+	url(r'^activateProduct/(?P<id>\w{0,50})/$',views.activateProduct),
+	url(r'^addStoreImage/(?P<id>\w{0,50})/$',views.addStoreImage,name="addStoreImage"),
+	url(r'^addProductMainImage/(?P<id>\w{0,50})/$',views.addProductMainImage,name="addProductMainImage"),
+	url(r'^duplicateProduct/(?P<id>\w{0,50})/$',views.duplicateProduct,name="duplicateProduct"),
 	url(r'^deleteStore/(?P<id>\w{0,50})/$',views.deleteStore),
 	url(r'^deleteProduct/(?P<id>\w{0,50})/$',views.deleteProduct),
-	#url(r'^product/(?P<id>\w{0,50})/$',views.product),
-	#url(r'^add',views.add , name='add'),
+	url(r'^editProduct/(?P<id>\w{0,50})/$',views.editProduct,name="editProduct"),
+	url(r'^editStore/(?P<id>\w{0,50})/$',views.editStore,name="editStore"),
+	url(r'^editProduct/(?P<id>\w{0,50})/$',views.editProduct,name="editProduct"),
 	url(r'^addProduct/(?P<id>\w{0,50})/$',views.addProduct,name='addProduct'),
 	url(r'^product_create/(?P<id>\w{0,50})/$',views.product_create,name='product_create'),
 	url(r'^store_details/(?P<id>\w{0,50})/$',views.store_details , name='store_details'),
@@ -30,9 +39,3 @@ urlpatterns = [
 	url(r'^register',views.register , name='register'),
 	url(r'^login',views.login , name='login'),
 ]
-
-'''
-if settings.DEBUG:
-	urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
-	urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
-'''

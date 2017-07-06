@@ -1,0 +1,56 @@
+{% include 'partials/header.html' %}
+
+{% load static %}
+<div id="mainBody">
+	<div class="container">
+	<div class="row">
+
+<script>
+function myFunction() {
+    var x = document.getElementById('myDIV');
+		//var y = document.getElementById('bshow');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+				//y.style.display = 'none';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+
+<div class="span3" style="margin-bottom:300px;">
+  <div class="well well-small" style="height:150px;" >
+  <button onclick="myFunction()" id="bshow">Ajouter Une Image</button>
+  <br>
+  <br>
+  <div id="myDIV" style="display:none; maring-top:50px">
+  <form action="" method="post" enctype="multipart/form-data" >
+  	{% csrf_token %}
+  	{{ form.as_p }}
+  	<input type="submit" value="Submit">
+  </form>
+  </div>
+</div>
+</div>
+
+<div class="span9">
+  <ul class="thumbnails">
+
+  {% for img in imgs %}
+        <li class="span3">
+        <div class="thumbnail" style="height:303px;">
+        <a>
+            <img src="/media/{{img.img}}" style="height:300px;" alt=""/>
+        </a>
+        </div>
+      </li>
+  {% endfor %}
+
+  </ul>
+
+</div>
+
+    </div>
+  </div>
+</div>
+{% include 'partials/footer.html' %}

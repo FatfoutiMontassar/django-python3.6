@@ -6,17 +6,69 @@
 	<div class="container">
 	<div class="row">
 
-<!-- Sidebar ================================================== -->
-{% include 'partials/sidebar.html' %}
-<!-- Sidebar end=============================================== -->
+		<!-- Sidebar ================================================== -->
+		<!-- Sidebar ================================================== -->
+		{% load static %}
+
+		<div id="sidebar" class="span3">
+				<div class="well well-small"><strong>Recherche Par Categorie:</strong></div>
+				<ul id="sideManu" class="nav nav-tabs nav-stacked">
+					{% if idC == "1" %}
+					<li ><a href="/shop/discovermore/1/1" style="color:grey; font-size:15px;">Vétement et accessoires [ {{nC1}} ]</a></li>
+					{% else %}
+					<li ><a href="/shop/discovermore/1/1">Vétement et accessoires [ {{nC1}} ]</a></li>
+					{% endif %}
+
+					{% if idC == "2" %}
+					<li ><a href="/shop/discovermore/2/1" style="color:grey; font-size:15px;">Bijoux [ {{nC2}} ]</a></li>
+					{% else %}
+					<li ><a href="/shop/discovermore/2/1">Bijoux [ {{nC2}} ]</a></li>
+					{% endif %}
+
+					{% if idC == "3" %}
+					<li ><a href="/shop/discovermore/3/1" style="color:grey; font-size:15px;">Founiture créatives [ {{nC3}} ]</a></li>
+					{% else %}
+					<li ><a href="/shop/discovermore/3/1">Founiture créatives [ {{nC3}} ]</a></li>
+					{% endif %}
+
+					{% if idC == "4" %}
+					<li ><a href="/shop/discovermore/4/1" style="color:grey; font-size:15px;">Mariages [ {{nC4}} ]</a></li>
+					{% else %}
+					<li ><a href="/shop/discovermore/4/1">Mariages [ {{nC4}} ]</a></li>
+					{% endif %}
+
+					{% if idC == "5" %}
+					<li ><a href="/shop/discovermore/5/1" style="color:grey; font-size:15px;">Maison [ {{nC5}} ]</a></li>
+					{% else %}
+					<li ><a href="/shop/discovermore/5/1">Maison [ {{nC5}} ]</a></li>
+					{% endif %}
+
+					{% if idC == "6" %}
+					<li ><a href="/shop/discovermore/6/1" style="color:grey; font-size:15px;">Enfant et bébé [ {{nC6}} ]</a></li>
+					{% else %}
+					<li ><a href="/shop/discovermore/6/1">Enfant et bébé [ {{nC6}} ]</a></li>
+					{% endif %}
+
+				</ul>
+				<br/>
+		<!-- Sidebar end=============================================== -->
+
+		</div>
+		<!-- Sidebar end=============================================== -->
 <div class="span9">
 	<h4>Produits:</h4>
 			<ul class="thumbnails">
 
-			{% for product in page %}
+			{% for product , Pimg in values %}
 						<li class="span3">
 						<div class="thumbnail" style="height:230px;">
-						<a  href="product_details.html"><img src="{{product.img.url}}" style="width:120px;height:120px;" alt=""/></a>
+						<a  href="product_details.html">
+							{% if Pimg %}
+							<img src="/media/{{Pimg.img}}" style="width:120px;height:120px;" alt=""/>
+							{% else %}
+							<img src="/media/default.jpg" style="width:120px;height:120px;" alt=""/>
+							{% endif %}
+						</a>
 						<div class="caption" style="bottom:0px; position: absolute; width:90%">
 							<h5>{{product.store.name}}: {{product.name}}</h5>
 							<!--
@@ -33,7 +85,9 @@
 								{% endif %}
 								<a class="btn" href="/shop/product_details/{{product.id}}">VIEW</a>
 								<a class="btn btn-primary">{{product.price}} Dt</a>
-								<a class="btn" href="#"><img src="{% static 'themes/images/editProduct.png' %}" style="height:18px;" title="Edit Product"></a>
+								<!--
+								<a class="btn" href="/shop/editProduct/{{product.id}}"><img src="{% static 'themes/images/editProduct.png' %}" style="height:18px;" title="Edit Product"></a>
+								-->
 								<!--
 								<a class="btn" href="/shop/deleteProduct/{{product.id}}"><img src="{% static 'themes/images/removeElement.png' %}" style="height:18px;" title="Delete Product"></a>
 								-->

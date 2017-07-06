@@ -18,10 +18,11 @@
 
 <!-- Sidebar ================================================== -->
 {% include 'partials/sidebar.html' %}
+</div>
 <!-- Sidebar end=============================================== -->
 
-
 <!-- beatiful moving bar ========================================== -->
+<!--
 <div class="span9">
 	<div class="well well-small">
 	<h4>Best Stores:<small class="pull-right">200+ featured stores</small></h4>
@@ -110,6 +111,7 @@
 		</div>
 </div>
 </div>
+-->
 <!-- beatiful moving bar end ========================================== -->
 
 
@@ -118,10 +120,17 @@
 		<h4>Stores</h4>
 			  <ul class="thumbnails">
 
-				{% for store in stores %}
+				{% for store , img in values %}
+					{% if store.isActive == True %}
 				<li class="span3" >
 				  <div class="thumbnail" style="height:270px;">
-					<a  href="product_details.html"><img style="width:180px;height:140px;" src="{{store.img.url}}" alt=""/></a>
+					<a  href="product_details.html">
+						{% if img %}
+						<img style="width:180px;height:140px;" src="/media/{{ img.img }}" alt=""/>
+						{% else %}
+						<img style="width:180px;height:140px;" src="/media/default.jpg" alt=""/>
+						{% endif %}
+					</a>
 
 					<div class="caption" style="width:100%; padding:0; bottom:0; border:0; position:absolute; ">
 					  <h5>{{store.name}}</h5>
@@ -129,7 +138,8 @@
 					  <h4 style="text-align:center;">
 						 <a class="btn" href="/shop/store_details/{{store.id}}" ><i class="icon-zoom-in"></i></a>
 					   <a class="btn" href="/shop/details/{{store.id}}">Visit Store</a>
-						 <a class="btn" href="#"><img src="{% static 'themes/images/editProduct.png' %}" style="height:18px;" title="Edit Store"></a>
+
+						 <a class="btn" href="/shop/editStore/{{store.id}}"><img src="{% static '/themes/images/editProduct.png' %}" style="height:18px;" title="Edit Store"></a>
 						 <!--
 						 <a class="btn" href="/shop/deleteStore/{{store.id}}"><img src="{% static 'themes/images/removeElement.png' %}" style="height:18px;" title="Delete Shop"></a>
 					 	 -->
@@ -138,6 +148,7 @@
 
 					</div>
 				</li>
+						{% endif %}
 			  	{% endfor %}
 
 			  </ul>
