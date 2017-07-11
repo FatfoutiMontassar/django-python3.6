@@ -44,14 +44,15 @@ class Product(models.Model):
 	description = models.TextField()
 	quantity = models.IntegerField(null=True,default=1)
 	created_at = models.DateTimeField(default=datetime.now, blank=True)
+	likes = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True)
 	store = models.ForeignKey(Store, on_delete=models.CASCADE,null=True)
 	categorie_choices = (
-		('Vétement et accessoires','Vétement et accessoires')
+		('Vetement et accessoires','Vetement et accessoires')
 		,('Bijoux','Bijoux')
-		,('Founiture créatives','Founiture créatives')
+		,('Founiture creatives','Founiture creatives')
 		,('Mariages','Mariages')
 		,('Maison','Maison')
-		,('Enfant et bébé','Enfant et bébé'))
+		,('Enfant et bebe','Enfant et bebe'))
 	categorie = models.CharField(max_length=200,null=True,choices = categorie_choices)
 	activationChoices = (
 	    (None, "I do not know now"),
@@ -60,11 +61,10 @@ class Product(models.Model):
 	)
 	isActive = models.NullBooleanField(choices = activationChoices,default=None)
 	typeChoices = (
-	    (1, "Tous les articles"),
-	    (2, "Faits main"),
-		(3, "Vintage"),
+	    (1, "Faits main"),
+		(2, "Vintage"),
 	)
-	Ptype = models.IntegerField(null=True,default=1,choices = typeChoices)
+	Ptype = models.IntegerField(null=True,default=2,choices = typeChoices)
 
 	def __str__(self):
 		return self.name

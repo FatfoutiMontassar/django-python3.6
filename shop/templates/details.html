@@ -69,13 +69,13 @@ function myFunction() {
 
 <!-- Sidebar ================================================== -->
 {% include 'partials/sidebar.html' %}
-<div class="well well-small" style="margin-top:20px;margin-bottom:300px;">
+<div class="well well-small" style="margin-top:20px;margin-bottom:25px;">
 	<h5><strong>Name: </strong>{{store.name}}</h5>
 	<h5><strong>Phone Number: </strong>{{store.phoneNumber}}</h5>
 	<h5><strong>Facebook Page: </strong>{{store.facebookPage}}</h5>
 	<h5><strong>Description: </strong><br/>{{store.description}}</h5>
 </div>
-
+{% include 'partials/filters.html' %}
 </div>
 <!-- Sidebar end=============================================== -->
 <script  language="JavaScript" type="text/javascript">
@@ -93,7 +93,11 @@ function myFunction() {
 			{% for product , Pimg in values %}
 			<div style="height:82px;width:100%;">
 						<div class="span2" style="height:82px; width:100px;border: 1px solid grey;">
-							<img src="/media/{{Pimg.img}}" style="height:100%;display: block; margin-left: auto;margin-right: auto;" >
+							{% if Pimg %}
+								<img src="/media/{{Pimg.img}}" style="height:100%;display: block; margin-left: auto;margin-right: auto;" >
+							{% else %}
+								<img src="/media/default.jpg" style="height:100%;display: block; margin-left: auto;margin-right: auto;" >
+							{% endif %}
 						</div>
 						<div class="span2">
 							<h4>
@@ -174,7 +178,7 @@ function myFunction() {
 						{% if nP > 0 %}
 						<ul>
 								 {% if page.has_previous %}
-										<li><a href="/shop/detailsmore/{{idS}}/{{page.previous_page_number}}" >&lang;</a></li>
+										<li><a href="/shop/details/{{idS}}/page={{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
 									{% else %}
 										<li><a>&lang;</a></li>
 								 {% endif %}
@@ -183,12 +187,12 @@ function myFunction() {
 									{% if id == pageId %}
 										<li><a class="active" >{{id}}</a></li>
 									{% else %}
-										<li><a href="/shop/detailsmore/{{idS}}/{{id}}">{{id}}</a></li>
+										<li><a href="/shop/details/{{idS}}/page={{id}}/{{filters}}">{{id}}</a></li>
 									{% endif %}
 								{% endfor %}
 
 								{% if page.has_next  %}
-										<li><a href="/shop/detailsmore/{{idS}}/{{page.next_page_number}}">&rang;</a></li>
+										<li><a href="/shop/details/{{idS}}/page={{page.next_page_number}}/{{filters}}">&rang;</a></li>
 								{% else %}
 										<li><a>&rang;</a></li>
 								{% endif %}

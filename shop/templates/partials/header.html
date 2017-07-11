@@ -24,6 +24,10 @@
 		<style type="text/css" id="enject"></style>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
   	<link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'>
+    <script type="text/javascript"  src="{% static 'js/jquery.min.js' %}"></script>
+
+
+
 
 
 </head>
@@ -55,26 +59,59 @@
 </a>
   <div class="navbar-inner">
     <a class="brand" href="/shop"><img src="{% static 'themes/images/logo.png' %}" alt="Bootsshop"/></a>
-		<form class="form-inline navbar-search" method="post" action="{% url 'search' %}" >
-			{% csrf_token %}
+		<form class="form-inline navbar-search" method="get" action="{% url 'search' %}" >
 		{% if input %}
-			<input id="srchFld" name="srchFld" type="text" value="{{input}}" />
+			<input id="q" name="q" type="text" value="{{input}}" />
 		{% else %}
-			<input id="srchFld" name="srchFld" type="text" placeholder="Recherche.." />
+			<input id="q" name="q" type="text" placeholder="Recherche.." />
 		{% endif %}
 
+			<select class="srchTxt" name="categorie">
 
-			<select class="srchTxt" name="srchTxt">
-
+			{% if idC == "0" %}
+			<option selected>Tous les categories</option>
+			{% else %}
 			<option>Tous les categories</option>
+			{% endif %}
 
-			<option>Vétement et accessoires</option>
+			{% if idC == "1" %}
+			<option selected>Vetement et accessoires</option>
+			{% else %}
+			<option >Vetement et accessoires</option>
+			{% endif %}
+
+			{% if idC == "2" %}
+			<option selected>Bijoux</option>
+			{% else %}
 			<option>Bijoux</option>
-			<option>Founiture créatives</option>
+			{% endif %}
+
+			{% if idC == "3" %}
+			<option selected>Founiture creatives</option>
+			{% else %}
+			<option>Founiture creatives</option>
+			{% endif %}
+
+			{% if idC == "4" %}
+			<option selected>Mariages</option>
+			{% else %}
 			<option>Mariages</option>
+			{% endif %}
+
+			{% if idC == "5" %}
+			<option selected>Maison</option>
+			{% else %}
 			<option>Maison</option>
-			<option>Enfant et bébé</option>
+			{% endif %}
+
+			{% if idC == "6" %}
+			<option selected>Enfant et bebe</option>
+			{% else %}
+			<option>Enfant et bebe</option>
+			{% endif %}
+
 		</select>
+
 		  <button type="submit" id="submitButton" class="btn btn-primary">Go</button>
     </form>
    <ul id="topMenu" class="nav pull-right">

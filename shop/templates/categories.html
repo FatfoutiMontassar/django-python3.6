@@ -14,39 +14,39 @@
 				<div class="well well-small"><strong>Recherche Par Categorie:</strong></div>
 				<ul id="sideManu" class="nav nav-tabs nav-stacked">
 					{% if idC == "1" %}
-					<li ><a href="/shop/discovermore/1/1" style="color:grey; font-size:15px;">Vétement et accessoires [ {{nC1}} ]</a></li>
+					<li ><a href="/shop/discover/1/1" style="color:blue;">Vetement et accessoires [ {{nC1}} ]</a></li>
 					{% else %}
-					<li ><a href="/shop/discovermore/1/1">Vétement et accessoires [ {{nC1}} ]</a></li>
+					<li ><a href="/shop/discover/1/1">Vetement et accessoires [ {{nC1}} ]</a></li>
 					{% endif %}
 
 					{% if idC == "2" %}
-					<li ><a href="/shop/discovermore/2/1" style="color:grey; font-size:15px;">Bijoux [ {{nC2}} ]</a></li>
+					<li ><a href="/shop/discover/2/1" style="color:blue;">Bijoux [ {{nC2}} ]</a></li>
 					{% else %}
-					<li ><a href="/shop/discovermore/2/1">Bijoux [ {{nC2}} ]</a></li>
+					<li ><a href="/shop/discover/2/1">Bijoux [ {{nC2}} ]</a></li>
 					{% endif %}
 
 					{% if idC == "3" %}
-					<li ><a href="/shop/discovermore/3/1" style="color:grey; font-size:15px;">Founiture créatives [ {{nC3}} ]</a></li>
+					<li ><a href="/shop/discover/3/1" style="color:blue;">Founiture creatives [ {{nC3}} ]</a></li>
 					{% else %}
-					<li ><a href="/shop/discovermore/3/1">Founiture créatives [ {{nC3}} ]</a></li>
+					<li ><a href="/shop/discover/3/1">Founiture creatives [ {{nC3}} ]</a></li>
 					{% endif %}
 
 					{% if idC == "4" %}
-					<li ><a href="/shop/discovermore/4/1" style="color:grey; font-size:15px;">Mariages [ {{nC4}} ]</a></li>
+					<li ><a href="/shop/discover/4/1" style="color:blue;">Mariages [ {{nC4}} ]</a></li>
 					{% else %}
-					<li ><a href="/shop/discovermore/4/1">Mariages [ {{nC4}} ]</a></li>
+					<li ><a href="/shop/discover/4/1">Mariages [ {{nC4}} ]</a></li>
 					{% endif %}
 
 					{% if idC == "5" %}
-					<li ><a href="/shop/discovermore/5/1" style="color:grey; font-size:15px;">Maison [ {{nC5}} ]</a></li>
+					<li ><a href="/shop/discover/5/1" style="color:blue;">Maison [ {{nC5}} ]</a></li>
 					{% else %}
-					<li ><a href="/shop/discovermore/5/1">Maison [ {{nC5}} ]</a></li>
+					<li ><a href="/shop/discover/5/1">Maison [ {{nC5}} ]</a></li>
 					{% endif %}
 
 					{% if idC == "6" %}
-					<li ><a href="/shop/discovermore/6/1" style="color:grey; font-size:15px;">Enfant et bébé [ {{nC6}} ]</a></li>
+					<li ><a href="/shop/discover/6/1" style="color:blue;">Enfant et bebe [ {{nC6}} ]</a></li>
 					{% else %}
-					<li ><a href="/shop/discovermore/6/1">Enfant et bébé [ {{nC6}} ]</a></li>
+					<li ><a href="/shop/discover/6/1">Enfant et bebe [ {{nC6}} ]</a></li>
 					{% endif %}
 
 				</ul>
@@ -103,7 +103,7 @@
 					{% if nP > 0 %}
 					<ul>
 							 {% if page.has_previous %}
-									<li><a href="/shop/discovermore/{{idC}}/{{page.previous_page_number}}" >&lang;</a></li>
+									<li><a href="/shop/discover/{{idC}}/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
 								{% else %}
 									<li><a>&lang;</a></li>
 							 {% endif %}
@@ -112,12 +112,12 @@
 								{% if id == pageId %}
 									<li><a class="active" >{{id}}</a></li>
 								{% else %}
-									<li><a href="/shop/discovermore/{{idC}}/{{id}}">{{id}}</a></li>
+									<li><a href="/shop/discover/{{idC}}/{{id}}/{{filters}}">{{id}}</a></li>
 								{% endif %}
 							{% endfor %}
 
 							{% if page.has_next  %}
-									<li><a href="/shop/discovermore/{{idC}}/{{page.next_page_number}}">&rang;</a></li>
+									<li><a href="/shop/discover/{{idC}}/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
 							{% else %}
 									<li><a>&rang;</a></li>
 							{% endif %}

@@ -8,20 +8,23 @@
 
 <!-- Sidebar ================================================== -->
 {% include 'partials/sidebar.html' %}
+{% include 'partials/filters.html' %}
 </div>
 <!-- Sidebar end=============================================== -->
 
-
+	<div class="span9" >
+		<h4 style="float:left;">Products:</h4>
+	</div>
 	<div class="span9">
-		<h4>Products:</h4>
+
 				<ul class="thumbnails">
 
-				{% for product , Pimg in values %}
+				{% for product , Pimg , liked in values %}
 							<li class="span3">
-							<div class="thumbnail" style="height:230px;">
-							<a  href="product_details.html">
+							<div class="thumbnail" style="height:300px;">
+							<a  style="height:210px; overflow:hidden;">
 								{% if Pimg %}
-									<img src="/media/{{Pimg.img}}" style="width:120px;height:120px;" alt=""/>
+									<img src="/media/{{Pimg.img}}" style="width:100%;" alt=""/>
 								{% else %}
 									<img src="/media/default.jpg" style="width:120px;height:120px;" alt=""/>
 								{% endif %}
@@ -33,6 +36,14 @@
 								-->
 							 <center>
 								<h4 style="text-align:center">
+									<a href="/shop/likeProduct/{{product.id}}" style="font-size:15px;text-decoration:none;">
+										{% if liked == True %}
+										Unlike
+										{% else %}
+										Like
+										{% endif %}
+									</a>
+									<a style="font-size:14px;">{{product.likes.count }}</a>
 									{% if product.isActive == True %}
 										<img src="{% static 'themes/images/active.png' %}" style="height:18px;" title="status">
 									{% elif product.isActive == False %}
@@ -59,7 +70,11 @@
         <div class="paginate paginate-dark wrapper" style="margin-top:30px; margin-bottom:30px;">
             <ul>
                  {% if page.has_previous %}
-                    <li><a href="/shop/discovermore/{{page.previous_page_number}}" >&lang;</a></li>
+										{% if idC %}
+											<li><a href="/shop/discover/{{idC}}/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
+										{% else %}
+											<li><a href="/shop/discover/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
+										{% endif %}
                   {% else %}
                     <li><a>&lang;</a></li>
                  {% endif %}
@@ -68,12 +83,20 @@
                   {% if id == pageId %}
                     <li><a class="active" >{{id}}</a></li>
                   {% else %}
-                    <li><a href="/shop/discovermore/{{id}}">{{id}}</a></li>
+										{% if idC %}
+											<li><a href="/shop/discover/{{idC}}/{{id}}/{{filters}}">{{id}}</a></li>
+										{% else %}
+											<li><a href="/shop/discover/{{id}}/{{filters}}">{{id}}</a></li>
+										{% endif %}
                   {% endif %}
                 {% endfor %}
 
                 {% if page.has_next  %}
-                    <li><a href="/shop/discovermore/{{page.next_page_number}}">&rang;</a></li>
+										{% if idC %}
+											<li><a href="/shop/discover/{{idC}}/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
+										{% else %}
+											<li><a href="/shop/discover/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
+										{% endif %}
                 {% else %}
                     <li><a>&rang;</a></li>
                 {% endif %}

@@ -1,0 +1,136 @@
+{% load static %}
+<hr>
+
+<h5>Type:</h5>
+<form method="get" action="#">
+  {% for name , value in request.GET.items %}
+    {% if name != 'Ptype' %}
+    <input type="hidden" name="{{name}}" value="{{value}}">
+    {% endif %}
+  {% endfor %}
+
+  {% if Ptype == "all" %}
+  <input type="radio" name="Ptype" value="all" checked > Tous<br>
+  {% else %}
+  <input type="radio" name="Ptype" value="all"> Tous<br>
+  {% endif %}
+
+  {% if Ptype == "handMade" %}
+  <input type="radio" name="Ptype" value="handMade" checked > Faits main<br>
+  {% else %}
+  <input type="radio" name="Ptype" value="handMade"> Faits main<br>
+  {% endif %}
+
+  {% if Ptype == "vintage" %}
+  <input type="radio" name="Ptype" value="vintage" checked > Vintage<br>
+  {% else %}
+  <input type="radio" name="Ptype" value="vintage"> Vintage<br>
+  {% endif %}
+
+  <br>
+  <input type="submit" value="choisir">
+</form>
+
+<hr>
+<!--
+<h5>Intervalle de Prix:</h5>
+
+<form method="get" action="#">
+  {% for name , value in request.GET.items %}
+    {% if name != 'Prange' %}
+    <input type="hidden" name="{{name}}" value="{{value}}">
+    {% endif %}
+  {% endfor %}
+
+  {% if Prange == "all" %}
+    <input type="radio" name="Prange" value="all" checked> Tous<br>
+  {% else %}
+    <input type="radio" name="Prange" value="all"> Tous<br>
+  {% endif %}
+
+  {% if Prange == "range1" %}
+    <input type="radio" name="Prange" value="range1" checked> Entre 1  Dt et 50 Dt<br>
+  {% else %}
+    <input type="radio" name="Prange" value="range1"> Entre 1  Dt et 50 Dt<br>
+  {% endif %}
+
+  {% if Prange == "range2" %}
+    <input type="radio" name="Prange" value="range2" checked> Entre 50 Dt et 1000 Dt<br>
+  {% else %}
+    <input type="radio" name="Prange" value="range2"> Entre 50 Dt et 1000 Dt<br>
+  {% endif %}
+
+  {% if Prange == "range3" %}
+    <input type="radio" name="Prange" value="range3" checked> Entre 1000 Dt et 100000 Dt<br>
+  {% else %}
+    <input type="radio" name="Prange" value="range3"> Entre 1000 Dt et 100000 Dt<br>
+  {% endif %}
+
+  <br>
+  <input type="submit" value="choisir">
+</form>
+
+
+<hr>
+-->
+<div class="layout">
+
+
+  <!-- bin/jquery.slider.min.css -->
+<link rel="stylesheet" href="{% static 'slider/css/jslider.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'slider/css/jslider.blue.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'slider/css/jslider.plastic.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'slider/css/jslider.round.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'slider/css/jslider.round.plastic.css' %}" type="text/css">
+<!-- end -->
+
+<script type="text/javascript" src="{% static 'slider/js/jquery-1.7.1.js' %}"></script>
+
+<!-- bin/jquery.slider.min.js -->
+<script type="text/javascript" src="{% static 'slider/js/jshashtable-2.1_src.js' %}"></script>
+<script type="text/javascript" src="{% static 'slider/js/jquery.numberformatter-1.2.3.js' %}"></script>
+<script type="text/javascript" src="{% static 'slider/js/tmpl.js' %}"></script>
+<script type="text/javascript" src="{% static 'slider/js/jquery.dependClass-0.1.js' %}"></script>
+<script type="text/javascript" src="{% static 'slider/js/draggable-0.1.js' %}"></script>
+<script type="text/javascript" src="{% static 'slider/js/jquery.slider.js' %}"></script>
+<!-- end -->
+
+
+    <div class="layout-slider" style="width: 100%">
+      <span style="display: inline-block; width: 100%; padding: 0 5px;"><input id="Slider1" type="slider" name="price" value="{{Pmin}};{{Pmax}}" /></span>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+      jQuery("#Slider1").slider({ from: 0, to: 10000, step: 50, smooth: true, round: 0, dimension: "&nbsp;Dt", skin: "plastic" });
+      function applyFilter(){
+        var url = window.location.href
+        var tab = document.getElementById("Slider1").value
+        tab = tab.split(";")
+        test = url.split("?")
+        if(test.length > 1){
+            window.location.replace(url+"&Pmin="+tab[0]+"&Pmax="+tab[1])
+            mainUlr = test[0]
+            mainUlr = mainUlr + "?"
+            gets = test[1]
+            gets = gets.split("&")
+            for(i = 0 ; i < gets.length ; i++ ){
+              get = gets[i] ;
+              nameAndValue = get.split("=")
+              if(nameAndValue[0] != "Pmin" && nameAndValue[0] != "Pmax"){
+                name = nameAndValue[0]
+                valuex = nameAndValue[1]
+                value = valuex.split("#")[0]
+                mainUlr += (name+"="+value+"&" )
+              }
+            }
+            mainUlr += ("Pmin="+tab[0]+"&Pmax="+tab[1])
+            window.location.replace(mainUlr)
+        }else{
+            window.location.replace(url+"?Pmin="+tab[0]+"&Pmax="+tab[1])
+        }
+      }
+    </script>
+    <br>
+    <button onclick="applyFilter();return 0 ;">Appliquer</button>
+</div>
+
+<hr>

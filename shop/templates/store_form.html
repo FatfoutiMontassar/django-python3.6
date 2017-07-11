@@ -1,15 +1,33 @@
 {% include 'partials/header.html' %}
 
-<center>
-  {{additional}}
+
+  <center>
+
+  {% if additional %}
+  <h4 style="margin-top:50px;margin-bottom:50px;">{{additional}}</h4>
+  {% endif %}
+
+  {% if additional %}
+    <div class="col-sm-12 col-md-7" style="margin-bottom:200px;">
+  {% else %}
   <div class="col-sm-12 col-md-7">
+  {% endif %}
             <div class="panel panel-default">
                 <div class="panel-body">
+                    {% if not additional %}
                     <h3>Create New Store</h3>
+                    {% endif %}
+
                     {% if error_message %}
                         <p style="color:red;"><strong>{{ error_message }}</strong></p>
                     {% endif %}
-                    <form class="form-horizontal" role="form" action="{% url 'store_create' %}" method="post" enctype="multipart/form-data">
+
+                    {% if additional %}
+                    <form class="form-horizontal" role="form" action="{% url 'store_create' comment='addStatus' %}" method="post" enctype="multipart/form-data">
+                    {% else %}
+                    <form class="form-horizontal" role="form" action="{% url 'store_create' comment='ok' %}" method="post" enctype="multipart/form-data">
+                    {% endif %}
+
                         {% csrf_token %}
                         {% for field in form %}
                             <div class="form-group" style="margin-top:10px;">
@@ -24,7 +42,9 @@
                         {% endfor %}
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10" style="margin-top:30px;">
-                                <button type="submit" class="btn btn-success">Save</button>
+                                <button type="submit" class="btn btn-success">
+                                  {% if additional %}Next{% else %}Save{% endif %}
+                                </button>
                             </div>
                         </div>
                     </form>

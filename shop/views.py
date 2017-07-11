@@ -15,10 +15,10 @@ from django.contrib.auth.models import User
 
 from django.http import HttpResponse, Http404
 
-from .models import Product, Store, Contact, StoreImage, ProductMainImage, ProductSecImage
+from .models import Product, Store, Contact, StoreImage, ProductMainImage, ProductSecImage , Trader
 
 from .forms import StoreForm, ProductForm, ContactForm, EditProductForm, StoreImageForm, addProductMainImageForm, \
-    productSImageForm
+    productSImageForm , TraderForm
 
 from django.shortcuts import get_object_or_404
 
@@ -26,10 +26,30 @@ from django.core.paginator import Paginator
 
 import re
 
+from django.views.generic import RedirectView
 # Create your views here.
 
-categoriesList = ["Vétement et accessoires", "Bijoux", "Founiture créatives", "Mariages", "Maison", "Enfant et bébé"]
 
+categoriesList = ["Vetement et accessoires", "Bijoux", "Founiture creatives", "Mariages", "Maison", "Enfant et bebe"]
+
+def ok(price,range):
+    if(range == "range1"):
+        if(price>=1 and price<=50):
+            return True
+        else:
+            return False
+    elif(range == "range2"):
+        if(price>=50 and price <=1000):
+            return True
+        else:
+            return False
+    elif(range == "range3"):
+        if(price>=1000 and price <= 100000):
+            return True
+        else:
+            return False
+    else:
+        return True
 
 def getCount(categorie):
     products = Product.objects.all()
@@ -68,6 +88,15 @@ def getStoreImage(store):
         img = imgs[0]
     return img
 
+def getSecImages(product):
+    imgs = ProductSecImage.objects.filter(product=product).order_by("-created_at")
+    ret = []
+
+    print "images here :: " + str(imgs.count())
+    for img in imgs:
+        ret.append(img)
+        print " --  : " + str(img.img)
+    return ret
 
 def match(str1, str2):
     str1 = str1.lower()
@@ -111,6 +140,18 @@ def album(request, id):
         }
         return render(request, 'album.html', context)
 
+def likeProduct(request,id):
+    if not request.user.is_authenticated():
+        raise Http404
+
+    product = get_object_or_404(Product,id=id)
+
+    if(request.user in product.likes.all() ):
+        product.likes.remove(request.user)
+    else:
+        product.likes.add(request.user)
+    product.save()
+    return redirect('/shop/')
 
 def editStore(request, id):
     if not request.user.is_authenticated():
@@ -186,79 +227,29 @@ def addProductMainImage(request, id):
         # print form.errors
         return redirect('/shop/product_details/' + str(id))
 
-
-def searchmore(request, cId, input):
-    # print "ok"
-    # return redirect('/shop')
-    mapInt2String = ["Tous les categories", "Vétement et accessoires", "Bijoux", "Founiture créatives", "Mariages",
-                     "Maison", "Enfant et bébé", "Boutiques", "utilisateurs"]
-
-    categorie = ""
-
-    for element in mapInt2String:
-        if getId(element) == int(cId):
-            categorie = element
-            break
-
-    wordList = re.sub("[^\w]", " ", str(input)).split()
-
-    products = Product.objects.all().order_by("-created_at")
-
-    '''
-	if (not categorie == "Tous les categories"):
-		products = products.filter(categorie=categorie)
-	'''
-    result = []
-    tab = []
-    '''
-	print match("test","test")
-
-	for word in wordList:
-		print "*"+word+"*"
-	'''
-    for product in products:
-        score = 0
-        for word in wordList:
-            # print word + " -- " + str(product.name)
-            # print word + " -- " + str(product.description)
-            if (match(word, str(product.name))):
-                # print "ok"
-                score += 4
-            if match(word, str(product.description)):
-                score += 1
-        if score > 0:
-            if product.categorie == categorie:
-                result.append((product, score, getMainImage(product)))
-            tab.append(product)
-        # print product.name
-
-    result.sort(key=lambda tup: tup[1])
-    # print len(result)
-    n = len(result)
-    '''
-	for x , scr , imgUrl in result:
-		print str(scr) + " -- " + x.name + " -- " + str(imgUrl.img)
-	print srchFld + " -- " + srchTxt
-	'''
-    context = {
-        'result': reversed(result),
-        'n': n,
-        'input': str(input),
-        'nC1': str(getCountFromList("Vétement et accessoires", tab)),
-        'nC2': str(getCountFromList("Bijoux", tab)),
-        'nC3': str(getCountFromList("Founiture créatives", tab)),
-        'nC4': str(getCountFromList("Mariages", tab)),
-        'nC5': str(getCountFromList("Maison", tab)),
-        'nC6': str(getCountFromList("Enfant et bébé", tab)),
-    }
-    return render(request, 'search.html', context)
-
-
 def search(request):
     # print "ok"
     # return redirect('/shop')
-    mapInt2String = ["Tous les categories", "Vétement et accessoires", "Bijoux", "Founiture créatives", "Mariages",
-                     "Maison", "Enfant et bébé", "Boutiques", "utilisateurs"]
+    Ptype = request.GET.get('Ptype', 'all')
+    #print Ptype
+
+    Prange = request.GET.get('Prange', 'all')
+    #print Prange
+
+    Pmin = request.GET.get('Pmin',0)
+    Pmax = request.GET.get('Pmax',10000)
+
+    categorie = "Tous les categories"
+
+    srchFld = request.GET.get('q', '')
+
+    srchTxt = request.GET.get('categorie', '')
+
+    categorie = str(srchTxt)
+
+
+    mapInt2String = ["Tous les categories", "Vetement et accessoires", "Bijoux", "Founiture creatives", "Mariages",
+                     "Maison", "Enfant et bebe", "Boutiques", "utilisateurs"]
     mapString2Int = []
 
     '''
@@ -266,127 +257,125 @@ def search(request):
 		and i'm gonna pass the search items in the context
 		we could actually get the results from here and send them to the next page!
 	'''
-    srchFld = request.POST.get('srchFld')
-    categorie = request.POST.get('srchTxt')
-    wordList = re.sub("[^\w]", " ", srchFld).split()
+    #srchFld = request.POST.get('srchFld')
+    #categorie = request.POST.get('srchTxt')
+    wordList = re.sub("[^\w]", " ", str(srchFld) ).split()
 
     products = Product.objects.all().order_by("-created_at")
 
-    '''
-	if (not categorie == "Tous les categories"):
-		products = products.filter(categorie=categorie)
-	'''
+    if(Ptype=="handMade"):
+        products = products.filter(Ptype=1)
+    if(Ptype=="vintage"):
+        products = products.filter(Ptype=2)
+
+    products = products.filter(price__gte=Pmin)
+    products = products.filter(price__lte=Pmax)
 
     result = []
     tab = []
 
-    '''
-	print match("test","test")
-
-	for word in wordList:
-		print "*"+word+"*"
-	'''
     for product in products:
-        score = 0
-        for word in wordList:
-            # print word + " -- " + str(product.name)
-            # print word + " -- " + str(product.description)
-            if (match(word, str(product.name))):
-                # print "ok"
-                score += 4
-            if (match(word, str(product.description))):
-                score += 1
-        if score > 0:
-            if ((product.categorie == categorie) or (categorie == "Tous les categories")):
-                result.append((product, score, getMainImage(product)))
-            tab.append(product)
+        if(ok(product.price,str(Prange))):
+            score = 0
+            for word in wordList:
+                # print word + " -- " + str(product.name)
+                # print word + " -- " + str(product.description)
+                if (match(word, str(product.name))):
+                    # print "ok"
+                    score += 4
+                if (match(word, str(product.description))):
+                    score += 1
+            if score > 0:
+                if ((product.categorie == categorie) or (categorie == "Tous les categories")):
+                    result.append((product, score, getMainImage(product)))
+                tab.append(product)
 
     result.sort(key=lambda tup: tup[1])
     # print len(result)
     n = len(result)
-    '''
-	for x , scr , imgUrl in result:
-		print str(scr) + " -- " + x.name + " -- " + str(imgUrl.img)
-	print srchFld + " -- " + srchTxt
-	'''
+
+    filters = "?Ptype="+str(Ptype)+"&Pmin="+str(Pmin)+"&Pmax="+str(Pmax)
     context = {
         'result': reversed(result),
         'n': n,
         'input': str(srchFld),
-        'nC1': str(getCountFromList("Vétement et accessoires", tab)),
+        'Ptype':str(Ptype),
+        'Prange':str(Prange),
+        'Pmin':Pmin,
+        'idC':str(getId(str(categorie))),
+        'Pmax':Pmax,
+        'filters':filters,
+        'nC1': str(getCountFromList("Vetement et accessoires", tab)),
         'nC2': str(getCountFromList("Bijoux", tab)),
-        'nC3': str(getCountFromList("Founiture créatives", tab)),
+        'nC3': str(getCountFromList("Founiture creatives", tab)),
         'nC4': str(getCountFromList("Mariages", tab)),
         'nC5': str(getCountFromList("Maison", tab)),
-        'nC6': str(getCountFromList("Enfant et bébé", tab)),
+        'nC6': str(getCountFromList("Enfant et bebe", tab)),
     }
+    #print context['filters']
+    #print "categorie id : " + context['idC']
     return render(request, 'search.html', context)
 
 
-def categories(request, idC, idP):
-    if (int(idC) > 6 or int(idC) < 1):
-        return redirect('/shop')
+def discover(request,idC="0",idP="1"):
+    #print "hello from discovermore!" + str(id)
 
-    products = Product.objects.all()
+    Ptype = request.GET.get('Ptype', 'all')
+    print Ptype
 
-    products = Product.objects.all().filter(categorie=categoriesList[int(idC) - 1]).order_by("-created_at")[:180]
-    # print categories[int(idC)-1]
-    pages = Paginator(products, 9)
-    intList = list(range(1, ((products.count() + 8) / 9) + 1))
-    idList = []
-    for id in intList:
-        idList.append(str(id))
+    Prange = request.GET.get('Prange', 'all')
+    print Prange
 
-    verifiedId = idP
-    if (int(idP) > ((products.count() + 8) / 9) or int(idP) < 1):
-        verifiedId = 1
-    page = pages.page(verifiedId)
-    values = []
+    Pmin = request.GET.get('Pmin',0)
+    Pmax = request.GET.get('Pmax',10000)
 
-    for product in page:
-        x = None
-        imgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
-        if imgs:
-            x = imgs[0]
-        values.append((product, x))
+    print Pmin
+    print Pmax
 
-    context = {
-        'page': page,
-        'pageId': verifiedId,
-        'idList': idList,
-        'idC': idC,
-        'nP': products.count(),
-        'values': values,
-        'nC1': getCount(categoriesList[0]),
-        'nC2': getCount(categoriesList[1]),
-        'nC3': getCount(categoriesList[2]),
-        'nC4': getCount(categoriesList[3]),
-        'nC5': getCount(categoriesList[4]),
-        'nC6': getCount(categoriesList[5]),
-    }
-    # print products.count()
-    return render(request, 'categories.html', context)
+    products = Product.objects.all().order_by("-created_at")
+    if(not int(idC) == 0):
+        products = products.filter(categorie=categoriesList[int(idC)-1])
 
+    if(Ptype=="handMade"):
+        print "shuold filter elements wich are handMade"
+        products = products.filter(Ptype=1)
+    if(Ptype=="vintage"):
+        products = products.filter(Ptype=2)
 
-def discovermore(request, id):
-    # print "hello from page!"
-    products = Product.objects.all().order_by("-created_at")[:180]
+    if(Prange == "range1"):
+        products = products.filter(price__gte=1)
+        products = products.filter(price__lte=50)
+    if(Prange == "range2"):
+        products = products.filter(price__gte=50)
+        products = products.filter(price__lte=1000)
+    if(Prange == "range3"):
+        products = products.filter(price__gte=1000)
+        products = products.filter(price__lte=100000)
+
+    products = products.filter(price__gte=Pmin)
+    products = products.filter(price__lte=Pmax)
+
     pages = Paginator(products, 9)
     # print "number of pages : " + str((products.count()+8)/9)
     intList = list(range(1, ((products.count() + 8) / 9) + 1))
-    verifiedId = id
+    verifiedId = idP
     values = []
 
-    if (int(id) > ((products.count() + 8) / 9) or int(id) < 1):
+    if (int(idP) > ((products.count() + 8) / 9) or int(idP) < 1):
         verifiedId = 1
     page = pages.page(verifiedId)
 
     for product in page:
-        x = None
-        imgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
-        if imgs:
-            x = imgs[0]
-        values.append((product, x))
+            x = None
+            imgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
+            if imgs:
+                x = imgs[0]
+            liked = False
+            if(request.user in product.likes.all() ):
+                liked = True
+            values.append((product, x,liked))
+
+    filters = "?Ptype="+str(Ptype)+"&Pmin="+str(Pmin)+"&Pmax="+str(Pmax)
 
     idList = []
     for i in intList:
@@ -396,8 +385,14 @@ def discovermore(request, id):
         'nPages': pages.num_pages,
         'values': values,
         'pageId': verifiedId,
+        'idC':str(idC),
         'page': page,
+        'Pmin':str(Pmin),
+        'Pmax':str(Pmax),
+        'Ptype':str(Ptype),
+        'Prange':str(Prange),
         'idList': idList,
+        'filters':filters,
         'nC1': getCount(categoriesList[0]),
         'nC2': getCount(categoriesList[1]),
         'nC3': getCount(categoriesList[2]),
@@ -408,39 +403,6 @@ def discovermore(request, id):
     # return render(request,'discover',context)
     return render(request, 'discover.html', context)
 
-
-def discover(request):
-    # print "hello from discover!"
-    global categoriesList
-    # print len(categoriesList)
-    products = Product.objects.all().order_by("-created_at")[:180]
-    pages = Paginator(products, 9)
-    idList = list(range(1, ((products.count() + 8) / 9) + 1))
-    page = pages.page(1)
-    values = []
-    for product in page:
-        x = None
-        imgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
-        if imgs:
-            x = imgs[0]
-        values.append((product, x))
-
-    context = {
-        'nPages': pages.num_pages,
-        'values': values,
-        'page': page,
-        'pageId': 1,
-        'idList': idList,
-        'nC1': getCount(categoriesList[0]),
-        'nC2': getCount(categoriesList[1]),
-        'nC3': getCount(categoriesList[2]),
-        'nC4': getCount(categoriesList[3]),
-        'nC5': getCount(categoriesList[4]),
-        'nC6': getCount(categoriesList[5]),
-    }
-    return render(request, 'discover.html', context)
-
-
 def product_details(request, id):
     product = Product.objects.get(id=id)
     form = addProductMainImageForm()
@@ -448,10 +410,15 @@ def product_details(request, id):
 
     img = getMainImage(product)
 
+    imgs = getSecImages(product)
+
+    #print imgs
+
     context = {
         'form': form,
         'product': product,
         'img': img,
+        'imgs':imgs,
         'editProductForm': editProductForm,
         'nC1': getCount(categoriesList[0]),
         'nC2': getCount(categoriesList[1]),
@@ -548,47 +515,62 @@ def product_create(request, id):
             # print store.name
             return render(request, 'product_form.html', context)
 
-
-def store_create(request):
+def store_create(request,comment):
     if not request.user.is_authenticated():
         raise Http404
     else:
         if (request.method == 'POST'):
-            form = StoreForm(request.POST or None, request.FILES or None)
-            # print form.errors
-            if form.is_valid():
-                instance = form.save(commit=False)
-                if (Store.objects.filter(name=instance.name).filter(user=request.user).exists()):
+            if(str(comment) == "ok"):
+                form = StoreForm(request.POST or None, request.FILES or None)
+                # print form.errors
+                if form.is_valid():
+                    instance = form.save(commit=False)
+                    if (Store.objects.filter(name=instance.name).filter(user=request.user).exists()):
+                        form = StoreForm()
+                        context = {
+                            'form': form,
+                            'error_message': "Error !! you have already created a store with the same name",
+                        }
+                        return render(request, 'store_form.html', context)
+                    else:
+                        instance.user = request.user
+                        instance.save()
+                        return redirect('/shop/stores')
+                else:
                     form = StoreForm()
+
                     context = {
                         'form': form,
-                        'error_message': "Error !! you have already created a store with the same name",
+                        'error_message': "Error !! form is not valid",
                     }
                     return render(request, 'store_form.html', context)
-                else:
+            elif(str(comment) == "addStatus"):
+                form = TraderForm(request.POST or None)
+                if form.is_valid:
+                    instance = form.save(commit=False)
                     instance.user = request.user
                     instance.save()
-                    return redirect('/shop/stores')
+                    return redirect('/shop/store_create/verifyFirst')
+                else:
+                    return redirect('/shop/stores/')
             else:
-                form = StoreForm()
+                raise Http404
 
+        else:
+            if not hasattr(request.user,'trader'):
+                additional = "this is your first store !! please select your status"
+                form = TraderForm()
                 context = {
                     'form': form,
-                    'error_message': "Error !! form is not valid",
+                    'additional':additional,
                 }
                 return render(request, 'store_form.html', context)
-        else:
-            additional = ""
-            if not hasattr(request.user,'trader'):
-                additional = "this is your first store !!"
-            
-            form = StoreForm()
-            context = {
-                'form': form,
-                'additional':additional,
-            }
-            return render(request, 'store_form.html', context)
-
+            else:
+                form = StoreForm()
+                context = {
+                    'form': form,
+                }
+                return render(request, 'store_form.html', context)
 
 def storesView(request):
     stores = Store.objects.all()[:18]
@@ -705,22 +687,51 @@ def addProduct(request, id):
         return render(request, 'addProduct.html', context)
 
 
-def details(request, id):
+def details(request, id,idP="1"):
     # print str(id)
+
+    Ptype = request.GET.get('Ptype', 'all')
+    #print Ptype
+
+    Prange = request.GET.get('Prange', 'all')
+    #print Prange
+
     store = Store.objects.get(id=id)
     products = store.product_set.all().order_by("-created_at")
+
+    Pmin = request.GET.get('Pmin',0)
+    Pmax = request.GET.get('Pmax',10000)
+
+    products = products.filter(price__gte=Pmin)
+    products = products.filter(price__lte=Pmax)
+
+    if(Ptype=="handMade"):
+        products = products.filter(Ptype=1)
+    if(Ptype=="vintage"):
+        products = products.filter(Ptype=2)
+
+    if(Prange == "range1"):
+        products = products.filter(price__gte=1)
+        products = products.filter(price__lte=50)
+    if(Prange == "range2"):
+        products = products.filter(price__gte=50)
+        products = products.filter(price__lte=1000)
+    if(Prange == "range3"):
+        products = products.filter(price__gte=1000)
+        products = products.filter(price__lte=100000)
+
     nP = products.count()
     form = StoreImageForm()
     imgs = StoreImage.objects.filter(store=store).order_by("-created_at")
     pages = Paginator(products, 9)
-    page = pages.page(1)
+    vId = int(idP)
+    if( ( vId > int((nP+8)/9) ) or (vId < 1) ):
+        vId = 1
+    page = pages.page(vId)
     values = []
     for product in page:
-        x = None
-        Pimgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
-
-        if Pimgs:
-            x = Pimgs[0]
+        x = getMainImage(product)
+        #print x
         values.append((product, x))
 
     intList = list(range(1, ((products.count() + 8) / 9) + 1))
@@ -728,111 +739,34 @@ def details(request, id):
     for i in intList:
         idList.append(str(i))
 
+    filters = "?Ptype="+str(Ptype)+"&Pmin="+str(Pmin)+"&Pmax="+str(Pmax)
+    context = {
+        'store': store,
+        'values': values,
+        'form': form,
+        'page': page,
+        'nP': nP,
+        'Pmin':Pmin,
+        'Pmax':Pmax,
+        'idList': idList,
+        'pageId': "1",
+        'filters':filters,
+        'Ptype':str(Ptype),
+        'Prange':str(Prange),
+        'idS': str(id),
+        'nC1': getCount(categoriesList[0]),
+        'nC2': getCount(categoriesList[1]),
+        'nC3': getCount(categoriesList[2]),
+        'nC4': getCount(categoriesList[3]),
+        'nC5': getCount(categoriesList[4]),
+        'nC6': getCount(categoriesList[5]),
+    }
     if imgs:
-        img = imgs[0]
+        context['img'] = imgs[0]
         # print img.img
 
-        context = {
-            'store': store,
-            'values': values,
-            'form': form,
-            'img': img,
-            'page': page,
-            'nP': nP,
-            'idList': idList,
-            'pageId': "1",
-            'idS': str(id),
-            'nC1': getCount(categoriesList[0]),
-            'nC2': getCount(categoriesList[1]),
-            'nC3': getCount(categoriesList[2]),
-            'nC4': getCount(categoriesList[3]),
-            'nC5': getCount(categoriesList[4]),
-            'nC6': getCount(categoriesList[5]),
-        }
-    else:
-        context = {
-            'store': store,
-            'values': values,
-            'form': form,
-            'page': page,
-            'nP': nP,
-            'idList': idList,
-            'pageId': "1",
-            'idS': str(id),
-            'nC1': getCount(categoriesList[0]),
-            'nC2': getCount(categoriesList[1]),
-            'nC3': getCount(categoriesList[2]),
-            'nC4': getCount(categoriesList[3]),
-            'nC5': getCount(categoriesList[4]),
-            'nC6': getCount(categoriesList[5]),
-        }
     print str(id)
     return render(request, 'details.html', context)
-
-
-def detailsMore(request, idS, idP):
-    store = Store.objects.get(id=idS)
-    products = store.product_set.all().order_by("-created_at")
-    nP = products.count()
-    form = StoreImageForm()
-    imgs = StoreImage.objects.filter(store=store).order_by("-created_at")
-    pages = Paginator(products, 9)
-    page = pages.page(int(idP))
-    values = []
-    for product in page:
-        x = None
-        Pimgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
-
-        if Pimgs:
-            x = Pimgs[0]
-        values.append((product, x))
-
-    intList = list(range(1, ((products.count() + 8) / 9) + 1))
-    idList = []
-    for i in intList:
-        idList.append(str(i))
-
-    if imgs:
-        img = imgs[0]
-        # print img.img
-
-        context = {
-            'store': store,
-            'values': values,
-            'form': form,
-            'img': img,
-            'page': page,
-            'nP': nP,
-            'idList': idList,
-            'pageId': str(idP),
-            'idS': str(idS),
-            'nC1': getCount(categoriesList[0]),
-            'nC2': getCount(categoriesList[1]),
-            'nC3': getCount(categoriesList[2]),
-            'nC4': getCount(categoriesList[3]),
-            'nC5': getCount(categoriesList[4]),
-            'nC6': getCount(categoriesList[5]),
-        }
-    else:
-        context = {
-            'store': store,
-            'values': values,
-            'form': form,
-            'page': page,
-            'nP': nP,
-            'idList': idList,
-            'pageId': str(idP),
-            'idS': str(idS),
-            'nC1': getCount(categoriesList[0]),
-            'nC2': getCount(categoriesList[1]),
-            'nC3': getCount(categoriesList[2]),
-            'nC4': getCount(categoriesList[3]),
-            'nC5': getCount(categoriesList[4]),
-            'nC6': getCount(categoriesList[5]),
-        }
-    print str(idS)
-    return render(request, 'details.html', context)
-
 
 def addStoreImage(request, id):
     form = StoreImageForm(request.POST or None, request.FILES or None)

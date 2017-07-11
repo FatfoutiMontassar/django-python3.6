@@ -11,49 +11,66 @@
 {% load static %}
 
 <div id="sidebar" class="span3">
-		<div class="well well-small"><strong>Recherche Par Categorie:</strong></div>
+	<div class="well well-small"><strong>Recherche Par Categorie:</strong></div>
 		<ul id="sideManu" class="nav nav-tabs nav-stacked">
+
 			{% if idC == "1" %}
-			<li ><a href="/shop/search/categorieId=1/search={{input}}" style="color:grey; font-size:15px;">Vétement et accessoires [ {{nC1}} ]</a></li>
+			<li ><a id="link1" href="#" style="color:blue;">Vetement et accessoires [ {{nC1}} ]</a></li>
 			{% else %}
-			<li ><a href="/shop/search/categorieId=1/search={{input}}">Vétement et accessoires [ {{nC1}} ]</a></li>
+			<li ><a id="link1" href="#" >Vetement et accessoires [ {{nC1}} ]</a></li>
 			{% endif %}
 
 			{% if idC == "2" %}
-			<li ><a href="/shop/search/categorieId=2/search={{input}}" style="color:grey; font-size:15px;">Bijoux [ {{nC2}} ]</a></li>
+			<li ><a id="link2" href="#" style="color:blue;">Bijoux [ {{nC2}} ]</a></li>
 			{% else %}
-			<li ><a href="/shop/search/categorieId=2/search={{input}}">Bijoux [ {{nC2}} ]</a></li>
+			<li ><a id="link2" href="#" >Bijoux [ {{nC2}} ]</a></li>
 			{% endif %}
 
 			{% if idC == "3" %}
-			<li ><a href="/shop/search/categorieId=3/search={{input}}" style="color:grey; font-size:15px;">Founiture créatives [ {{nC3}} ]</a></li>
+			<li ><a id="link3" href="#" style="color:blue;">Founiture creatives [ {{nC3}} ]</a></li>
 			{% else %}
-			<li ><a href="/shop/search/categorieId=3/search={{input}}">Founiture créatives [ {{nC3}} ]</a></li>
+			<li ><a id="link3" href="#">Founiture creatives [ {{nC3}} ]</a></li>
 			{% endif %}
 
 			{% if idC == "4" %}
-			<li ><a href="/shop/search/categorieId=4/search={{input}}" style="color:grey; font-size:15px;">Mariages [ {{nC4}} ]</a></li>
+			<li ><a id="link4" href="#" style="color:blue;">Mariages [ {{nC4}} ]</a></li>
 			{% else %}
-			<li ><a href="/shop/search/categorieId=4/search={{input}}">Mariages [ {{nC4}} ]</a></li>
+			<li ><a id="link4" href="#" >Mariages [ {{nC4}} ]</a></li>
 			{% endif %}
 
 			{% if idC == "5" %}
-			<li ><a href="/shop/search/categorieId=5/search={{input}}" style="color:grey; font-size:15px;">Maison [ {{nC5}} ]</a></li>
+			<li ><a id="link5" href="#" style="color:blue;">Maison [ {{nC5}} ]</a></li>
 			{% else %}
-			<li ><a href="/shop/search/categorieId=5/search={{input}}">Maison [ {{nC5}} ]</a></li>
+			<li ><a id="link5" href="#" >Maison [ {{nC5}} ]</a></li>
 			{% endif %}
 
 			{% if idC == "6" %}
-			<li ><a href="/shop/search/categorieId=6/search={{input}}" style="color:grey; font-size:15px;">Enfant et bébé [ {{nC6}} ]</a></li>
+			<li ><a id="link6" href="#" style="color:blue;">Enfant et bebe [ {{nC6}} ]</a></li>
 			{% else %}
-			<li ><a href="/shop/search/categorieId=6/search={{input}}">Enfant et bébé [ {{nC6}} ]</a></li>
+			<li ><a id="link6" href="#" >Enfant et bebe [ {{nC6}} ]</a></li>
 			{% endif %}
 
 		</ul>
 		<br/>
-<!-- Sidebar end=============================================== -->
-
+{% include 'partials/filters.html' %}
 </div>
+<script type="text/javascript">
+		url = document.getElementById("link1").href;
+
+		newUrl1 = "/shop/search/{{filters}}&q={{input}}&categorie=Vetement+et+accessoires" ;
+		newUrl2 = "/shop/search/{{filters}}&q={{input}}&categorie=Bijoux" ;
+		newUrl3 = "/shop/search/{{filters}}&q={{input}}&categorie=Founiture+creatives" ;
+		newUrl4 = "/shop/search/{{filters}}&q={{input}}&categorie=Mariages" ;
+		newUrl5 = "/shop/search/{{filters}}&q={{input}}&categorie=Maison" ;
+		newUrl6 = "/shop/search/{{filters}}&q={{input}}&categorie=Enfant+et+bebe" ;
+		document.getElementById("link1").setAttribute('href', newUrl1 );
+		document.getElementById("link2").setAttribute('href', newUrl2 );
+		document.getElementById("link3").setAttribute('href', newUrl3 );
+		document.getElementById("link4").setAttribute('href', newUrl4 );
+		document.getElementById("link5").setAttribute('href', newUrl5 );
+		document.getElementById("link6").setAttribute('href', newUrl6 );
+
+</script>
 <!-- Sidebar end=============================================== -->
 
 	<div class="span9" style="margin-bottom:80px;">

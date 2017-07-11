@@ -37,10 +37,10 @@ function myFunction() {
   <ul class="thumbnails">
 
   {% for img in imgs %}
-        <li class="span3">
-        <div class="thumbnail" style="height:303px;">
-        <a>
-            <img src="/media/{{img.img}}" style="height:300px;" alt=""/>
+       <li class="span3">
+        <div class="thumbnail" style="height:300px;">
+        <a style="height:300px;overflow:hidden;" >
+            <img src="/media/{{img.img}}" style="width:100%;" alt=""/>
         </a>
         </div>
       </li>
