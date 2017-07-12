@@ -95,7 +95,7 @@ def getSecImages(product):
     print "images here :: " + str(imgs.count())
     for img in imgs:
         ret.append(img)
-        print " --  : " + str(img.img)
+        #print " --  : " + str(img.img)
     return ret
 
 def match(str1, str2):
@@ -124,8 +124,7 @@ def album(request, id):
             instance.save()
             return redirect('/shop/album/' + str(id))
         else:
-            print "error !!"
-            print form.errors
+            #print "error !!"
             # print form.errors
             return redirect('/shop/album/' + str(id))
         return redirect(request, '/shop/album/' + str(id))
@@ -175,10 +174,7 @@ def editStore(request, id):
             # print product.name
             # print str(product.id)
             store.save()
-        else:
-            print "Error !!"
-        print str(id)
-        return redirect('/shop/stores/' + str(id))
+            return redirect('/shop/stores/' + str(id))
 
     else:
         store = get_object_or_404(Store, id=id)
@@ -205,10 +201,10 @@ def duplicateProduct(request, id):
 def activateProduct(request, id):
     product = get_object_or_404(Product, id=id)
     if product.isActive == True:
-        print "become not active"
+        #print "become not active"
         product.isActive = False
     else:
-        print "become active"
+        #print "become active"
         product.isActive = True
     product.save()
     return redirect('/shop/product_details/' + str(int(id)))
@@ -222,8 +218,8 @@ def addProductMainImage(request, id):
         instance.save()
         return redirect('/shop/product_details/' + str(id))
     else:
-        print "error !!"
-        print form.errors
+        #print "error !!"
+        #print form.errors
         # print form.errors
         return redirect('/shop/product_details/' + str(id))
 
@@ -321,23 +317,23 @@ def discover(request,idC="0",idP="1"):
     #print "hello from discovermore!" + str(id)
 
     Ptype = request.GET.get('Ptype', 'all')
-    print Ptype
+    #print Ptype
 
     Prange = request.GET.get('Prange', 'all')
-    print Prange
+    #print Prange
 
     Pmin = request.GET.get('Pmin',0)
     Pmax = request.GET.get('Pmax',10000)
 
-    print Pmin
-    print Pmax
+    #print Pmin
+    #print Pmax
 
     products = Product.objects.all().order_by("-created_at")
     if(not int(idC) == 0):
         products = products.filter(categorie=categoriesList[int(idC)-1])
 
     if(Ptype=="handMade"):
-        print "shuold filter elements wich are handMade"
+        #print "shuold filter elements wich are handMade"
         products = products.filter(Ptype=1)
     if(Ptype=="vintage"):
         products = products.filter(Ptype=2)
@@ -471,8 +467,6 @@ def editProduct(request, id):
             # print product.name
             # print str(product.id)
             product.save()
-        else:
-            print "Error !!"
         return redirect('/shop/product_details/' + str(id))
     else:
         product = get_object_or_404(Product, id=id)
@@ -493,8 +487,8 @@ def product_create(request, id):
     else:
         if (request.method == 'POST'):
             form = ProductForm(request.POST or None, request.FILES or None)
-            print form.errors
-            print form
+            #print form.errors
+            #print form
             if form.is_valid():
                 instance = form.save(commit=False)
                 store = Store.objects.get(id=id)
@@ -502,8 +496,6 @@ def product_create(request, id):
                 instance.store = store
                 instance.isActive = False
                 instance.save()
-            else:
-                print "Error !!"
             return redirect('/shop/details/' + id)
         else:
             store = Store.objects.get(id=id)
@@ -577,8 +569,6 @@ def storesView(request):
     values = []
     for store in stores:
         values.append((store, getStoreImage(store)))
-    for a, b in values:
-        print a, b
     context = {
         'values': values,
         'nC1': getCount(categoriesList[0]),
@@ -610,7 +600,7 @@ def register(request):
         confirmPassword = request.POST['confirmPassword']
 
         if (password == confirmPassword):
-            print "password == confirmPassword"
+            #print "password == confirmPassword"
             if (User.objects.filter(username=email).exists()):
                 print("Error , acout alreasy exists")
             else:
@@ -765,7 +755,7 @@ def details(request, id,idP="1"):
         context['img'] = imgs[0]
         # print img.img
 
-    print str(id)
+    #print str(id)
     return render(request, 'details.html', context)
 
 def addStoreImage(request, id):
@@ -777,7 +767,7 @@ def addStoreImage(request, id):
         return redirect('/shop/stores')
     else:
         print "error !!"
-        print form.errors
+        #print form.errors
         # print form.errors
         return redirect('/shop/stores')
 
@@ -788,7 +778,7 @@ def deleteStore(request, id):
 
 
 def deleteProduct(request, id):
-    print "delete : " + str(id)
+    #print "delete : " + str(id)
     product = Product.objects.get(id=id)
     store = product.store
     Product.objects.filter(id=id).delete()
