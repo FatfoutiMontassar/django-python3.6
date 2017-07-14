@@ -46,5 +46,42 @@
     <script src="{% static 'themes/js/jquery.lightbox-0.5.js' %}"></script>
 		<script src="{% static 'js/index.js' %}"></script>
 	<!-- Themes switcher section ============================================================================================= -->
+<script type="text/javascript">
+
+	$('.testOfJquery').on("click",function(){
+		window.alert("ok!!")
+		return false ;
+	});
+	$("ul.thumbnails").on("click", ".like", function () {
+    var li = $(this).closest("li");
+    var id = $(li).attr("product-id");
+    var csrf = $(li).attr("csrf");
+    //window.alert("like !!" + id)
+    $.ajax({
+      url: '/shop/likeProduct/'+id+'/',
+      data: {
+        'id': id,
+        'csrfmiddlewaretoken': csrf
+      },
+      type: 'post',
+      cache: false,
+      success: function (data) {
+				//window.alert("success :D")
+				if ($(".like", li).hasClass("unlike")) {
+          $(".like", li).removeClass("unlike");
+          $(".like .text", li).text("Like");
+        }
+        else {
+          $(".like", li).addClass("unlike");
+          $(".like .text", li).text("Unlike");
+        }
+				$(".like-count", li).text(data);
+			}
+    });
+    return false;
+  });
+
+
+</script>
 </body>
 </html>

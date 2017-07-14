@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
 	url(r'^', include('shop.urls') ),
 	url(r'^shop/', include('shop.urls') ),
+    url(r'^messenger/', include('messenger.urls') ),
     url(r'^admin/', admin.site.urls),
 ]
 

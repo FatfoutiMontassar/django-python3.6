@@ -140,6 +140,7 @@ def album(request, id):
         return render(request, 'album.html', context)
 
 def likeProduct(request,id):
+    print "like product call !!"
     if not request.user.is_authenticated():
         raise Http404
 
@@ -150,7 +151,7 @@ def likeProduct(request,id):
     else:
         product.likes.add(request.user)
     product.save()
-    return redirect('/shop/')
+    return HttpResponse(product.likes.count())
 
 def editStore(request, id):
     if not request.user.is_authenticated():

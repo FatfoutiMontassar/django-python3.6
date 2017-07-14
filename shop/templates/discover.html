@@ -12,6 +12,7 @@
 </div>
 <!-- Sidebar end=============================================== -->
 
+
 	<div class="span9" >
 		<h4 style="float:left;">Products:</h4>
 	</div>
@@ -20,7 +21,7 @@
 				<ul class="thumbnails">
 
 				{% for product , Pimg , liked in values %}
-							<li class="span3">
+							<li class="span3" product-id="{{ product.id }}" csrf="{{ csrf_token }}" >
 							<div class="thumbnail" style="height:300px;">
 							<a  style="height:210px; overflow:hidden;">
 								{% if Pimg %}
@@ -36,14 +37,18 @@
 								-->
 							 <center>
 								<h4 style="text-align:center">
-									<a href="/shop/likeProduct/{{product.id}}" style="font-size:15px;text-decoration:none;">
-										{% if liked == True %}
-										Unlike
-										{% else %}
-										Like
-										{% endif %}
+
+									{% if liked == True %}
+									<a href="#"  class="like unlike" style="font-size:15px;text-decoration:none;">
+										<span class="text">Unlike</span>
 									</a>
-									<a style="font-size:14px;">{{product.likes.count }}</a>
+									{% else %}
+									<a href="#"  class="like" style="font-size:15px;text-decoration:none;">
+										<span class="text">Like</span>
+									</a>
+									{% endif %}
+
+									<span style="font-size:12px;" class="like-count">{{ product.likes.count }}</span>
 									{% if product.isActive == True %}
 										<img src="{% static 'themes/images/active.png' %}" style="height:18px;" title="status">
 									{% elif product.isActive == False %}
@@ -53,12 +58,6 @@
 									{% endif %}
 									<a class="btn" href="/shop/product_details/{{product.id}}">VIEW</a>
 									<a class="btn btn-primary">{{product.price}} Dt</a>
-									<!--
-									<a class="btn" href="#"><img src="{% static 'themes/images/editProduct.png' %}" style="height:18px;" title="Edit Product"></a>
-									-->
-									<!--
-									<a class="btn" href="/shop/deleteProduct/{{product.id}}"><img src="{% static 'themes/images/removeElement.png' %}" style="height:18px;" title="Delete Product"></a>
-									-->
 								</h4>
 							 </center>
 							</div>
@@ -108,6 +107,5 @@
 		</div>
 	</div>
 </div>
-
 
 {% include 'partials/footer.html' %}
