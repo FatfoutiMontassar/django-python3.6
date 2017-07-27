@@ -1,14 +1,33 @@
 <li>
-  <img src="{{ message.from_user.profile.get_picture }}" class="picture">
+  {% if message.from_user.profile.picture %}
+  <img src="/media/{{message.from_user.profile.picture}}" class="picture">
+  {% else %}
+  <img src="/media/profile_picture/default_profile_picture.png" class="picture">
+  {% endif %}
   <div>
     <h5>
-      <small class="pull-right">
+      <small class="pull-right" style="margin-right:5px;">
         {{ message.date|date:'N d G:i' }}
       </small>
       <a href="">
         {{ message.from_user.profile.get_screen_name }}
       </a>
     </h5>
-    {{ message.message }}
+    <a>{{message.from_user.first_name }} {{message.from_user.last_name}}</a><br>
+
+    {% if message.image %}
+      <img src="/media/{{message.image}}" style="width:20%">
+    {% else %}
+
+        {% if message.relatedProducts.all.count != 0 %}
+            <h5><strong>Related Products:</strong></h5>
+            {% for product in message.relatedProducts.all %}
+              <a href="/shop/product_details/{{product.id}}/" style="text-decoration:none;" target="_blank">{{ product.name }}</a><br>
+            {% endfor %}
+        {% endif %}
+        <h5><strong>Message:</strong></h5>
+        {{ message.message }}<br><br>
+
+    {% endif %}
   </div>
 </li>

@@ -27,6 +27,9 @@ from django.core.paginator import Paginator
 import re
 
 from django.views.generic import RedirectView
+
+import json
+
 # Create your views here.
 
 
@@ -81,6 +84,7 @@ def getMainImage(product):
     return img
 
 
+
 def getStoreImage(store):
     imgs = StoreImage.objects.filter(store=store).order_by("-created_at")
     img = None
@@ -92,7 +96,7 @@ def getSecImages(product):
     imgs = ProductSecImage.objects.filter(product=product).order_by("-created_at")
     ret = []
 
-    print "images here :: " + str(imgs.count())
+    #print "images here :: " + str(imgs.count())
     for img in imgs:
         ret.append(img)
         #print " --  : " + str(img.img)
@@ -114,6 +118,14 @@ def match(str1, str2):
             return True
     return False
 
+def products(request):
+    ans = Product.objects.all()
+    ret = []
+    template = '{0} ({1})'
+    for p in ans:
+        ret.append(p.name)
+    data = json.dumps(ret)
+    return HttpResponse(data,content_type='application/json')
 
 def album(request, id):
     if (request.method == 'POST'):
@@ -139,6 +151,79 @@ def album(request, id):
         }
         return render(request, 'album.html', context)
 
+def reactionRemove(request,id):
+    if not request.user.is_authenticated():
+        raise Http404
+    product = get_object_or_404(Product,id=id)
+
+    if(request.user in product.likes.all() ):
+        product.likes.remove(request.user)
+
+    if(request.user in product.smiles.all() ):
+        product.smiles.remove(request.user)
+
+    if(request.user in product.wishes.all() ):
+        product.wishes.remove(request.user)
+
+    print "reaction removed successfully ..."
+
+    return HttpResponse(product.likes.count() + product.smiles.count() + product.wishes.count())
+
+def reactionLike(request,id):
+    if not request.user.is_authenticated():
+        raise Http404
+    product = get_object_or_404(Product,id=id)
+    if(request.user in product.likes.all() ):
+        product.likes.remove(request.user)
+
+    if(request.user in product.smiles.all() ):
+        product.smiles.remove(request.user)
+
+    if(request.user in product.wishes.all() ):
+        product.wishes.remove(request.user)
+
+    product.likes.add(request.user)
+    product.save()
+    print "reaction --Like-- added  successfully ..."
+
+    return HttpResponse(product.likes.count() + product.smiles.count() + product.wishes.count())
+
+def reactionLove(request,id):
+    if not request.user.is_authenticated():
+        raise Http404
+    product = get_object_or_404(Product,id=id)
+    if(request.user in product.likes.all() ):
+        product.likes.remove(request.user)
+
+    if(request.user in product.smiles.all() ):
+        product.smiles.remove(request.user)
+
+    if(request.user in product.wishes.all() ):
+        product.wishes.remove(request.user)
+    product.smiles.add(request.user)
+    product.save()
+    print "reaction --Love-- added successfully ..."
+
+    return HttpResponse(product.likes.count() + product.smiles.count() + product.wishes.count())
+
+def reactionWow(request,id):
+    if not request.user.is_authenticated():
+        raise Http404
+    product = get_object_or_404(Product,id=id)
+    if(request.user in product.likes.all() ):
+        product.likes.remove(request.user)
+
+    if(request.user in product.smiles.all() ):
+        product.smiles.remove(request.user)
+
+    if(request.user in product.wishes.all() ):
+        product.wishes.remove(request.user)
+    product.wishes.add(request.user)
+    product.save()
+    print "reaction --Wow-- added successfully ..."
+
+    return HttpResponse(product.likes.count() + product.smiles.count() + product.wishes.count())
+
 def likeProduct(request,id):
     print "like product call !!"
     if not request.user.is_authenticated():
@@ -152,6 +237,34 @@ def likeProduct(request,id):
         product.likes.add(request.user)
     product.save()
     return HttpResponse(product.likes.count())
+
+def smileProduct(request,id):
+    print "smile product call !!"
+    if not request.user.is_authenticated():
+        raise Http404
+
+    product = get_object_or_404(Product,id=id)
+
+    if(request.user in product.smiles.all() ):
+        product.smiles.remove(request.user)
+    else:
+        product.smiles.add(request.user)
+    product.save()
+    return HttpResponse(product.smiles.count())
+
+def wishProduct(request,id):
+    print "wish product call !!"
+    if not request.user.is_authenticated():
+        raise Http404
+
+    product = get_object_or_404(Product,id=id)
+
+    if(request.user in product.wishes.all() ):
+        product.wishes.remove(request.user)
+    else:
+        product.wishes.add(request.user)
+    product.save()
+    return HttpResponse(product.wishes.count())
 
 def editStore(request, id):
     if not request.user.is_authenticated():
@@ -367,10 +480,16 @@ def discover(request,idC="0",idP="1"):
             imgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
             if imgs:
                 x = imgs[0]
-            liked = False
+            liked  = False
+            smiled = False
+            wished = False
             if(request.user in product.likes.all() ):
                 liked = True
-            values.append((product, x,liked))
+            if(request.user in product.smiles.all() ):
+                smiled = True
+            if(request.user in product.wishes.all() ):
+                wished = True
+            values.append((product, x,liked,smiled,wished,str(product.likes.count() + product.smiles.count() + product.wishes.count())))
 
     filters = "?Ptype="+str(Ptype)+"&Pmin="+str(Pmin)+"&Pmax="+str(Pmax)
 

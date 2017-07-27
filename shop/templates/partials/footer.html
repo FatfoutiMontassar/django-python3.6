@@ -39,49 +39,17 @@
 	</div><!-- Container End -->
 	</div>
 <!-- Placed at the end of the document so the pages load faster ============================================= -->
+<!--
 	<script src="{% static 'themes/js/jquery.js' %}" type="text/javascript"></script>
+-->
 	<script src="{% static 'themes/js/bootstrap.min.js' %}" type="text/javascript"></script>
 	<script src="{% static 'themes/js/google-code-prettify/prettify.js' %}"></script>
 	<script src="{% static 'themes/js/bootshop.js' %}"></script>
-    <script src="{% static 'themes/js/jquery.lightbox-0.5.js' %}"></script>
-		<script src="{% static 'js/index.js' %}"></script>
+  <script src="{% static 'themes/js/jquery.lightbox-0.5.js' %}"></script>
+	<script src="{% static 'js/index.js' %}"></script>
+	<script src="{% static 'js/jquery.typeahead.bundle.js' %}" type="text/javascript"></script>
+
 	<!-- Themes switcher section ============================================================================================= -->
-<script type="text/javascript">
-
-	$('.testOfJquery').on("click",function(){
-		window.alert("ok!!")
-		return false ;
-	});
-	$("ul.thumbnails").on("click", ".like", function () {
-    var li = $(this).closest("li");
-    var id = $(li).attr("product-id");
-    var csrf = $(li).attr("csrf");
-    //window.alert("like !!" + id)
-    $.ajax({
-      url: '/shop/likeProduct/'+id+'/',
-      data: {
-        'id': id,
-        'csrfmiddlewaretoken': csrf
-      },
-      type: 'post',
-      cache: false,
-      success: function (data) {
-				//window.alert("success :D")
-				if ($(".like", li).hasClass("unlike")) {
-          $(".like", li).removeClass("unlike");
-          $(".like .text", li).text("Like");
-        }
-        else {
-          $(".like", li).addClass("unlike");
-          $(".like .text", li).text("Unlike");
-        }
-				$(".like-count", li).text(data);
-			}
-    });
-    return false;
-  });
-
-
-</script>
 </body>
+<script src="{% static 'js/search.typehead.js' %}"></script>
 </html>

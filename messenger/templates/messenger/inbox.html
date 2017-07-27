@@ -7,17 +7,30 @@
 <br><br><br><br><br><br><br><br>
 {% block container %}
   {% if messages %}
-  <ul class="conversation">
+  <ul class="conversation" >
+    <div style="height:450px;overflow:hidden;overflow-y:scroll;" name="list-of-messages" id="list-of-messages">
     {% for message in messages %}
       {% include 'messenger/includes/partial_message.html' with message=message %}
     {% endfor %}
+    </div>
     <li class="send-message">
-      <img src="" class="picture">
+      {% if user.profile.picture %}
+      <img src="/media/{{user.profile.picture}}" class="picture">
+      {% else %}
+      <img src="/media/profile_picture/default_profile_picture.png" class="picture">
+      {% endif %}
       <div style="margin-top: .3em">
         <form role="form" method="post" id="send">
           {% csrf_token %}
           <input type="hidden" name="to" value="{{ active }}">
           <input class="form-control" type="text" name="message" placeholder="Write a message..." maxlength="1000" autocomplete="off">
+        </form>
+        <form id="picture-upload-form" to="{{ active }}" enctype="multipart/form-data" csrf="{{csrf_token}}" >
+          {% csrf_token %}
+          <input type="file" name="picture" id="picture-input" style="display:none;">
+          <input type="hidden" name="to" value="{{ active }}">
+          <button type="button" class="btn btn-default" id="btn-upload-picture" title="attach image">image</button>
+          <input type="hidden" name="test" value="hiddenValue">
         </form>
       </div>
     </li>

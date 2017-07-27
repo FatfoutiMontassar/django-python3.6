@@ -15,12 +15,13 @@
 
 	<div class="span9" >
 		<h4 style="float:left;">Products:</h4>
+
 	</div>
 	<div class="span9">
 
 				<ul class="thumbnails">
 
-				{% for product , Pimg , liked in values %}
+				{% for product , Pimg , liked , smiled , wished , sum in values %}
 							<li class="span3" product-id="{{ product.id }}" csrf="{{ csrf_token }}" >
 							<div class="thumbnail" style="height:300px;">
 							<a  style="height:210px; overflow:hidden;">
@@ -35,20 +36,82 @@
 								<!--
 								<h5 style="margin-top:0;">is active : {{product.isActive}}</h5>
 								-->
-							 <center>
-								<h4 style="text-align:center">
 
+							 <!--<center>-->
+
+							 <!-- start like block -->
+							 	<h4 style="text-align:center">
+									<span class="like-btn" style="font-size:14px; text-align:left;" product-id="{{product.id}}" csrf="{{ csrf_token }}"> <!-- Default like button -->
+										{% if liked %}
+											<span class="like-btn-emo like-btn-like"></span> <!-- Default like button emotion-->
+											<span class="like-btn-text like-btn-text-like active">Like</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
+										{% elif smiled %}
+											<span class="like-btn-emo like-btn-love"></span> <!-- Default like button emotion-->
+											<span class="like-btn-text like-btn-text-love active">Love</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
+										{% elif wished %}
+											<span class="like-btn-emo like-btn-wow"></span> <!-- Default like button emotion-->
+											<span class="like-btn-text like-btn-text-wow active">Wow</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
+										{% else %}
+											<span class="like-btn-emo like-btn-default"></span> <!-- Default like button emotion-->
+											<span class="like-btn-text">Like</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
+										{% endif %}
+											<ul class="reactions-box"> <!-- Reaction buttons container-->
+												<li class="reaction reaction-like" data-reaction="Like"></li>
+												<li class="reaction reaction-love" data-reaction="Love"></li>
+												<li class="reaction reaction-wow" data-reaction="Wow"></li>
+											</ul>
+											<span style="font-size:12px;margin-right:5px;" class="like-count">{{sum}}</span>
+									</span>
+
+									<!-- original likes interface , shouldn't change the model ..
 									{% if liked == True %}
 									<a href="#"  class="like unlike" style="font-size:15px;text-decoration:none;">
-										<span class="text">Unlike</span>
+										<img class="like-icon" src="{% static '/themes/images/thumb-up-blue.png' %}" style="height:18px;">
+										<span class="text" style="color:blue">Like</span>
 									</a>
 									{% else %}
 									<a href="#"  class="like" style="font-size:15px;text-decoration:none;">
-										<span class="text">Like</span>
+										<img class="like-icon" src="{% static '/themes/images/thumb-up.png' %}" style="height:18px;">
+										<span class="text" style="color:black;">Like</span>
 									</a>
 									{% endif %}
 
 									<span style="font-size:12px;" class="like-count">{{ product.likes.count }}</span>
+									-->
+
+
+									<!-- end like block  -->
+									<!--
+									{% if smiled == True %}
+									<a href="#"  class="smile unsmile" style="font-size:15px;text-decoration:none;">
+										<span class="text">U</span>
+									</a>
+									{% else %}
+									<a href="#"  class="smile" style="font-size:15px;text-decoration:none;">
+										<span class="text">S</span>
+									</a>
+									{% endif %}
+
+									<span style="font-size:12px;" class="smile-count">{{ product.smiles.count }}</span>
+
+									{% if wished == True %}
+									<a href="#"  class="wish unwish" style="font-size:15px;text-decoration:none;">
+										<span class="text">U</span>
+									</a>
+									{% else %}
+									<a href="#"  class="wish" style="font-size:15px;text-decoration:none;">
+										<span class="text">W</span>
+									</a>
+									{% endif %}
+
+									<span style="font-size:12px;" class="wish-count">{{ product.wishes.count }}</span>
+									-->
+									<!--
+									<a href="https://www.facebook.com/sharer/sharer.php?u=https://www.youtube.com/watch?v=dKb_IQtkh2A">
+									S</a>
+									-->
+
+									<!--
 									{% if product.isActive == True %}
 										<img src="{% static 'themes/images/active.png' %}" style="height:18px;" title="status">
 									{% elif product.isActive == False %}
@@ -56,10 +119,11 @@
 									{% else %}
 										<img src="{% static 'themes/images/notSure.png' %}" style="height:18px;" title="status">
 									{% endif %}
+									-->
 									<a class="btn" href="/shop/product_details/{{product.id}}">VIEW</a>
 									<a class="btn btn-primary">{{product.price}} Dt</a>
 								</h4>
-							 </center>
+							 <!--</center>-->
 							</div>
 							</div>
 						</li>

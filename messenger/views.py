@@ -3,20 +3,38 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import redirect, render
-
+from django.shortcuts import redirect, render ,  get_object_or_404
 from .decorators import ajax_required
 from .models import Message
+from shop.models import ProductMainImage
+from .forms import AttachImageForm
+from shop.models import Product
+from shop import views
 
+def getMainImage(product):
+    imgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
+    img = None
+    if imgs:
+        img = imgs[0]
+    return img
 
 @login_required
 def inbox(request):
     conversations = Message.get_conversations(user=request.user)
     active_conversation = None
     messages = None
+    products = []
     if conversations:
         conversation = conversations[0]
         active_conversation = conversation['user'].username
+        user = conversation['user']
+
+        for store in user.store_set.all():
+            print store.name
+            for product in store.product_set.all():
+                products.append((product,getMainImage(product)))
+
+
         messages = Message.objects.filter(user=request.user,
                                           conversation=conversation['user'])
         messages.update(is_read=True)
@@ -24,7 +42,13 @@ def inbox(request):
             if conversation['user'].username == active_conversation:
                 conversation['unread'] = 0
 
+    for store in request.user.store_set.all():
+        print store.name
+        for product in store.product_set.all():
+            products.append((product,getMainImage(product)))
+
     context = {
+        'products':products,
         'messages': messages,
         'conversations': conversations,
         'active': active_conversation
@@ -43,7 +67,28 @@ def messages(request, username):
         if conversation['user'].username == username:
             conversation['unread'] = 0
 
+    products = []
+    ouser = get_object_or_404(User,username=username)
+    print "other user's username :: " + str(ouser.username)+ "  " + str(hasattr(request.user , 'trader')) + "  " + str(hasattr(ouser,'trader'))
+    if (hasattr(request.user , 'trader') and not hasattr(ouser,'trader')) or (not hasattr(request.user , 'trader') and hasattr(ouser,'trader') ):
+            print "ok!!!"
+    else:
+        print "not ok at all :p"
+
+    print "connected user ..."
+    for store in request.user.store_set.all():
+        print store.name
+        for product in store.product_set.all():
+            products.append((product,getMainImage(product)))
+
+    print "other user ..."
+    for store in ouser.store_set.all():
+        print store.name
+        for product in store.product_set.all():
+            products.append((product,getMainImage(product)))
+
     return render(request, 'messenger/inbox.html', {
+        'products':products,
         'messages': messages,
         'conversations': conversations,
         'active': active_conversation
@@ -55,6 +100,10 @@ def new(request):
     if request.method == 'POST':
         from_user = request.user
         to_user_username = request.POST.get('to')
+        productId = request.POST.get('productId')
+        #print str(productId)
+        product = get_object_or_404(Product, id=productId)
+        #print product.name
         try:
             to_user = User.objects.get(username=to_user_username)
             print("new message has secceffuly found the user..")
@@ -71,15 +120,23 @@ def new(request):
         if len(message.strip()) == 0:
             return redirect('/messages/new/')
 
-        Message.send_message(from_user, to_user, message)
+        Message.send_message_with_product(from_user, to_user, message,product)
 
         return redirect('/messenger/new/')
         #return redirect('/messages/{0}/'.format(to_user_username))
 
     else:
+        to = request.GET.get('to', 'empty')
+        productId = request.GET.get('productId','notSet')
         conversations = Message.get_conversations(user=request.user)
-        return render(request, 'messenger/new.html',
-                      {'conversations': conversations})
+        context = {
+            'conversations': conversations,
+        }
+        if(to != "empty"):
+            context["to"] = to
+            context["productId"] = productId
+
+        return render(request, 'messenger/new.html',context)
 
 
 @login_required
@@ -92,6 +149,10 @@ def delete(request):
 @ajax_required
 def send(request):
     if request.method == 'POST':
+        relatedProducts =  str(request.POST.get('relatedProducts'))
+        relatedProducts = relatedProducts.split('&')
+        #print relatedProducts
+
         from_user = request.user
         to_user_username = request.POST.get('to')
         to_user = User.objects.get(username=to_user_username)
@@ -101,6 +162,16 @@ def send(request):
         #this line has been modified , it used to test (from_user != to_user)
         if True:
             msg = Message.send_message(from_user, to_user, message)
+            omsg = get_object_or_404(Message,id=str(int(msg.id)+1))
+            for p in relatedProducts:
+                if(len(p) > 0 ):
+                    pr = get_object_or_404(Product,id=str(p))
+                    msg.relatedProducts.add(pr)
+                    omsg.relatedProducts.add(pr)
+                    #print pr.name
+            msg.save()
+            omsg.save()
+            print str(msg.id) + " -- " + str(omsg.id)
             return render(request, 'messenger/includes/partial_message.html',
                           {'message': msg})
 
@@ -108,12 +179,24 @@ def send(request):
     else:
         return HttpResponseBadRequest()
 
+def send_image(request):
+    #print "hello from send image !!"
+    to = request.POST.get('to')
+    val = request.POST.get('test')
+    to_user = get_object_or_404(User,username=to)
+    image = request.FILES.get('picture')
+    print type(image)
+    message = "image.."
+    msg  = Message.send_message_with_image(request.user ,to_user,message,image)
+
+    return render(request, 'messenger/includes/partial_message.html',
+                  {'message': msg})
 
 @login_required
 @ajax_required
 def users(request):
     users = User.objects.filter(is_active=True)
-    print "I have been called :p"
+    #print "I have been called :p"
     dump = []
     template = '{0} ({1})'
     for user in users:

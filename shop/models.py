@@ -44,7 +44,9 @@ class Product(models.Model):
 	description = models.TextField()
 	quantity = models.IntegerField(null=True,default=1)
 	created_at = models.DateTimeField(default=datetime.now, blank=True)
-	likes = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True)
+	likes = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='likes_of_this_product')
+	smiles = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='smiles_of_this_product')
+	wishes = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='wishes_of_this_product')
 	store = models.ForeignKey(Store, on_delete=models.CASCADE,null=True)
 	categorie_choices = (
 		('Vetement et accessoires','Vetement et accessoires')

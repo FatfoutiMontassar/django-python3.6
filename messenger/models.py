@@ -5,6 +5,10 @@ from django.db import models
 from django.db.models import Max
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+import shop
+
+def rename(instance,name):
+	return 'messages/'+str(instance.date)+name
 
 
 @python_2_unicode_compatible
@@ -15,6 +19,8 @@ class Message(models.Model):
     conversation = models.ForeignKey(User, related_name='+')
     from_user = models.ForeignKey(User, related_name='+')
     is_read = models.BooleanField(default=False)
+    image = models.ImageField(null=True,upload_to=rename)
+    relatedProducts = models.ManyToManyField(shop.models.Product,blank=True,related_name='relatedProducts')
 
     class Meta:
         verbose_name = _('Message')
@@ -38,6 +44,43 @@ class Message(models.Model):
                 conversation=from_user,
                 message=message,
                 user=to_user).save()
+
+        return current_user_message
+
+    @staticmethod
+    def send_message_with_image(from_user, to_user, message,image):
+        message = message[:1000]
+        current_user_message = Message(from_user=from_user,
+                                       message=message,
+                                       user=from_user,
+                                       conversation=to_user,
+                                       is_read=True,
+                                       image=image)
+									   
+        current_user_message.save()
+        Message(from_user=from_user,
+                conversation=from_user,
+                message=message,
+                user=to_user,
+                image=image).save()
+
+        return current_user_message
+
+    @staticmethod
+    def send_message_with_product(from_user, to_user, message,product):
+        message = message[:1000]
+        current_user_message = Message(from_user=from_user,
+                                       message=message,
+                                       user=from_user,
+                                       conversation=to_user,
+                                       is_read=True,
+                                       product=product)
+        current_user_message.save()
+        Message(from_user=from_user,
+                conversation=from_user,
+                message=message,
+                user=to_user,
+                product=product).save()
 
         return current_user_message
 

@@ -99,7 +99,6 @@ function Edit() {
 			</div>
 
 
-
 			<div class="span2" style="maring-left:0px; width:200px;">
 				<div class="well well-small" >
 					<h5><strong>Name: </strong>{{product.name}}</h5>
@@ -115,12 +114,30 @@ function Edit() {
 					<h5><strong>Description: </strong><br/>{{product.description}}</h5>
 				</div>
 				<a class="btn" href="/shop/album/{{product.id}}">Modifier Album</a>
+				<br>
+				<br>
+				<form action="/messenger/new/" method="GET">
+					<input id="to" name="to" type="hidden" value="{{product.store.user.username}}" >
+					<input id="productId" name="productId" type="hidden" value="{{product.id}}" >
+					<button type="submit">Demander Une Question</button>
+				</form>
       </div>
 
 			<!--
 				secondary images has been succefullly loaded to this page , the
 				attribute is called igms , you just need to show them in a beatifum way ..
 			-->
+
+
+			<div class="span6" style="height:150px;margin-top:20px;margin-bottom:20px;">
+
+				{% for img in imgs|slice:":3" %}
+				<div class="span2" style="height:150px;overflow:hidden;margin-left:15px;">
+					<img src="/media/{{img.img}}" style="width:100%;" alt=""/>
+				</div>
+				{% endfor %}
+
+			</div>
 
   </div>
 </div>
