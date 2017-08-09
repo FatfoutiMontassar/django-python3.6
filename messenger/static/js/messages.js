@@ -1,3 +1,6 @@
+/*
+  sends messages directly using ajax.
+*/
 $(function () {
   var scrolled = 0
 
@@ -32,7 +35,9 @@ $(function () {
         $("#list-of-messages").append(data);
         $("input[name='message']").val('');
         $("input[name='message']").focus();
-
+        var numberOfMessages = $("#list-of-messages").attr("numberOfMessages");
+        document.getElementById("list-of-messages").setAttribute("numberOfMessages",(parseInt(numberOfMessages) + 1));
+        //alert($("#list-of-messages").attr("numberOfMessages"))
         scrolled=scrolled+10000;
         $("#list-of-messages").animate({
           scrollTop:  scrolled

@@ -36,15 +36,13 @@
 
 <!-- 5orm taba3 il like :p -->
 	<link rel="stylesheet" type="text/css" href="{% static 'css/reaction.css' %}" />
-	<script src="{% static 'js/reaction.js' %}"></script>
-<!-- end 5orm taba3 il like :p -->
 
+<!-- end 5orm taba3 il like :p -->
 
 </head>
 <body>
 
-
-	<div id="header" style="top:0px;">
+	<div id="header" style="margin-top:0px;">
 <div class="container">
 <div id="welcomeLine" class="row">
 
@@ -73,14 +71,19 @@
 	<span class="icon-bar"></span>
 </a>
   <div class="navbar-inner">
-    <a class="brand" href="/shop"><img src="{% static 'themes/images/logo.png' %}" alt="Bootsshop"/></a>
+    <a class="brand" href="/discover"><img src="{% static 'themes/images/logo.png' %}" alt="Bootsshop"/></a>
+
+		<a href="#" id="notifications" data-container="body" data-toggle="popover" data-placement="bottom" title="Notifications" style="margin-left:30px;">
+				<img src="{% static 'themes/images/bell.png' %}" style="width:20px;	"/>
+		</a>
+
 		<form class="form-inline navbar-search" method="get" action="{% url 'search' %}" >
 		{% if input %}
 			<input class="form-control typeahead" id="q" name="q" type="text" style="margin-top:12px;" value="{{input}}" />
 		{% else %}
 			<input class="form-control typeahead" id="q" name="q" type="text" style="margin-top:12px;" placeholder="Recherche.." />
 		{% endif %}
-			<select class="srchTxt" name="categorie">
+			<select class="srchTxt" name="categorie" >
 
 			{% if idC == "0" %}
 			<option selected>Tous les categories</option>
@@ -141,9 +144,9 @@
 				 <li><a href="/shop/contact_create">Contacter</a></li>
 				 <li class="divider"></li>
 				 {% if user.is_authenticated %}
-					 <li><a href="/shop/logout">Deconnexion</a></li>
+					 <li><a href="/authentication/logout">Deconnexion</a></li>
 				 {% else %}
-					 <li><a href="/shop/login">Se connecter</a></li>
+					 <li><a href="/authentication/login">Se connecter</a></li>
 				 {% endif %}
 			 </ul>
 		 </li>

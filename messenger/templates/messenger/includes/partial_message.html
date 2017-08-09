@@ -17,13 +17,24 @@
 
     {% if message.image %}
       <img src="/media/{{message.image}}" style="width:20%">
+      <br><br>
     {% else %}
 
         {% if message.relatedProducts.all.count != 0 %}
             <h5><strong>Related Products:</strong></h5>
+            <table>
             {% for product in message.relatedProducts.all %}
-              <a href="/shop/product_details/{{product.id}}/" style="text-decoration:none;" target="_blank">{{ product.name }}</a><br>
+              <tr>
+                <td style="height:40px;">
+                  <img src="/media/{{product.get_image.img }}" style="height:30px;" class="picture">
+                </td>
+                <td style="width:10px;"></td>
+                <td>
+                  <a href="/shop/product_details/{{product.id}}/" style="text-decoration:none;" target="_blank">{{ product.name }}</a><br>
+                </td>
+              </tr>
             {% endfor %}
+          </table>
         {% endif %}
         <h5><strong>Message:</strong></h5>
         {{ message.message }}<br><br>

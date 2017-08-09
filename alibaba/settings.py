@@ -32,14 +32,18 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
+    'discover.apps.DiscoverConfig',
+    'notifications.apps.NotificationsConfig',
     'shop.apps.ShopConfig',
     'messenger.apps.MessengerConfig',
+    'reactions.apps.ReactionsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 ]
 
 ''' added lines start here :

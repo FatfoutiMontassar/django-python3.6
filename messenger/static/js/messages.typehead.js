@@ -1,3 +1,7 @@
+/*
+  autocomplete the name of the desitnation user in
+  the new.html page.
+*/
 $(function () {
   var substringMatcher = function(strs) {
     return function findMatches(q, cb) {

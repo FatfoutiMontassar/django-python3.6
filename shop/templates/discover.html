@@ -15,6 +15,24 @@
 
 	<div class="span9" >
 		<h4 style="float:left;">Products:</h4>
+		<style>
+			.glyphicon{
+				position:relative;
+				top:1px;
+				display:inline-block;
+				font-family:'Glyphicons Halflings';
+				font-style:normal;
+				font-weight:400;
+				line-height:1;
+				-webkit-font-smoothing:antialiased;
+				-moz-osx-font-smoothing:grayscale
+			}
+			.glyphicon-bell:before{
+				content:"\e123"
+			}
+
+		</style>
+
 
 	</div>
 	<div class="span9">
@@ -26,7 +44,7 @@
 							<div class="thumbnail" style="height:300px;">
 							<a  style="height:210px; overflow:hidden;">
 								{% if Pimg %}
-									<img src="/media/{{Pimg.img}}" style="width:100%;" alt=""/>
+									<img src="/media/{{product.get_image.img}}" style="width:100%;" alt=""/>
 								{% else %}
 									<img src="/media/default.jpg" style="width:120px;height:120px;" alt=""/>
 								{% endif %}
@@ -134,9 +152,9 @@
             <ul>
                  {% if page.has_previous %}
 										{% if idC %}
-											<li><a href="/shop/discover/{{idC}}/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
+											<li><a href="/discover/{{idC}}/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
 										{% else %}
-											<li><a href="/shop/discover/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
+											<li><a href="/discover/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
 										{% endif %}
                   {% else %}
                     <li><a>&lang;</a></li>
@@ -147,18 +165,18 @@
                     <li><a class="active" >{{id}}</a></li>
                   {% else %}
 										{% if idC %}
-											<li><a href="/shop/discover/{{idC}}/{{id}}/{{filters}}">{{id}}</a></li>
+											<li><a href="/discover/{{idC}}/{{id}}/{{filters}}">{{id}}</a></li>
 										{% else %}
-											<li><a href="/shop/discover/{{id}}/{{filters}}">{{id}}</a></li>
+											<li><a href="/discover/{{id}}/{{filters}}">{{id}}</a></li>
 										{% endif %}
                   {% endif %}
                 {% endfor %}
 
                 {% if page.has_next  %}
 										{% if idC %}
-											<li><a href="/shop/discover/{{idC}}/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
+											<li><a href="/discover/{{idC}}/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
 										{% else %}
-											<li><a href="/shop/discover/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
+											<li><a href="/discover/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
 										{% endif %}
                 {% else %}
                     <li><a>&rang;</a></li>

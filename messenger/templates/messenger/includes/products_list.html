@@ -1,0 +1,6 @@
+{% for product , img in values %}
+  <a class="list-group-item product" product-id="{{product.id}}" product-name="{{product.name}}" style="">
+    <img src="/media/{{ img.img }}" class="conversation-portrait">
+    {{product.name}}
+  </a>
+{% endfor %}

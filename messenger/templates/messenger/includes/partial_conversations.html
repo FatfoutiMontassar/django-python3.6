@@ -9,8 +9,9 @@
   {% endcomment %}
 
   {% for conversation in conversations %}
-    <a href="{% url 'messages' conversation.user.username %}"
-      class="list-group-item{% if active == conversation.user.username %} active{% endif %}">
+    <!-- fref used to be "{% url 'messages' conversation.user.username %}" -->
+    <a style="cursor:pointer;" username="{{ conversation.user.username }}"
+      class="list-group-item{% if active == conversation.user.username %} active{% endif %}" >
       {% if conversation.user.profile.picture %}
       <img src="/media/{{ conversation.user.profile.picture }}" class="conversation-portrait">
       {% else %}

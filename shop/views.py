@@ -35,25 +35,6 @@ import json
 
 categoriesList = ["Vetement et accessoires", "Bijoux", "Founiture creatives", "Mariages", "Maison", "Enfant et bebe"]
 
-def ok(price,range):
-    if(range == "range1"):
-        if(price>=1 and price<=50):
-            return True
-        else:
-            return False
-    elif(range == "range2"):
-        if(price>=50 and price <=1000):
-            return True
-        else:
-            return False
-    elif(range == "range3"):
-        if(price>=1000 and price <= 100000):
-            return True
-        else:
-            return False
-    else:
-        return True
-
 def getCount(categorie):
     products = Product.objects.all()
     return products.filter(categorie=categorie).count()
@@ -151,120 +132,6 @@ def album(request, id):
         }
         return render(request, 'album.html', context)
 
-def reactionRemove(request,id):
-    if not request.user.is_authenticated():
-        raise Http404
-    product = get_object_or_404(Product,id=id)
-
-    if(request.user in product.likes.all() ):
-        product.likes.remove(request.user)
-
-    if(request.user in product.smiles.all() ):
-        product.smiles.remove(request.user)
-
-    if(request.user in product.wishes.all() ):
-        product.wishes.remove(request.user)
-
-    print "reaction removed successfully ..."
-
-    return HttpResponse(product.likes.count() + product.smiles.count() + product.wishes.count())
-
-def reactionLike(request,id):
-    if not request.user.is_authenticated():
-        raise Http404
-    product = get_object_or_404(Product,id=id)
-    if(request.user in product.likes.all() ):
-        product.likes.remove(request.user)
-
-    if(request.user in product.smiles.all() ):
-        product.smiles.remove(request.user)
-
-    if(request.user in product.wishes.all() ):
-        product.wishes.remove(request.user)
-
-    product.likes.add(request.user)
-    product.save()
-    print "reaction --Like-- added  successfully ..."
-
-    return HttpResponse(product.likes.count() + product.smiles.count() + product.wishes.count())
-
-def reactionLove(request,id):
-    if not request.user.is_authenticated():
-        raise Http404
-    product = get_object_or_404(Product,id=id)
-    if(request.user in product.likes.all() ):
-        product.likes.remove(request.user)
-
-    if(request.user in product.smiles.all() ):
-        product.smiles.remove(request.user)
-
-    if(request.user in product.wishes.all() ):
-        product.wishes.remove(request.user)
-    product.smiles.add(request.user)
-    product.save()
-    print "reaction --Love-- added successfully ..."
-
-    return HttpResponse(product.likes.count() + product.smiles.count() + product.wishes.count())
-
-def reactionWow(request,id):
-    if not request.user.is_authenticated():
-        raise Http404
-    product = get_object_or_404(Product,id=id)
-    if(request.user in product.likes.all() ):
-        product.likes.remove(request.user)
-
-    if(request.user in product.smiles.all() ):
-        product.smiles.remove(request.user)
-
-    if(request.user in product.wishes.all() ):
-        product.wishes.remove(request.user)
-    product.wishes.add(request.user)
-    product.save()
-    print "reaction --Wow-- added successfully ..."
-
-    return HttpResponse(product.likes.count() + product.smiles.count() + product.wishes.count())
-
-def likeProduct(request,id):
-    print "like product call !!"
-    if not request.user.is_authenticated():
-        raise Http404
-
-    product = get_object_or_404(Product,id=id)
-
-    if(request.user in product.likes.all() ):
-        product.likes.remove(request.user)
-    else:
-        product.likes.add(request.user)
-    product.save()
-    return HttpResponse(product.likes.count())
-
-def smileProduct(request,id):
-    print "smile product call !!"
-    if not request.user.is_authenticated():
-        raise Http404
-
-    product = get_object_or_404(Product,id=id)
-
-    if(request.user in product.smiles.all() ):
-        product.smiles.remove(request.user)
-    else:
-        product.smiles.add(request.user)
-    product.save()
-    return HttpResponse(product.smiles.count())
-
-def wishProduct(request,id):
-    print "wish product call !!"
-    if not request.user.is_authenticated():
-        raise Http404
-
-    product = get_object_or_404(Product,id=id)
-
-    if(request.user in product.wishes.all() ):
-        product.wishes.remove(request.user)
-    else:
-        product.wishes.add(request.user)
-    product.save()
-    return HttpResponse(product.wishes.count())
 
 def editStore(request, id):
     if not request.user.is_authenticated():
@@ -709,54 +576,6 @@ def product(request, id):
     return render(request, 'product.html', context)
 
 
-# the trick is to use email as username and username as email :p (it will work perfecty as us username is unique)
-def register(request):
-    if (request.method == 'POST'):
-        # uname = request.POST['uname']
-        email = request.POST['email']
-        # fname = request.POST['fname']
-        # lname = request.POST['lname']
-        password = request.POST['password']
-        confirmPassword = request.POST['confirmPassword']
-
-        if (password == confirmPassword):
-            #print "password == confirmPassword"
-            if (User.objects.filter(username=email).exists()):
-                print("Error , acout alreasy exists")
-            else:
-                user = User.objects.create_user(username=email, password=password)
-                user.save()
-                user = authenticate(username=email, password=password)
-                if user is not None:
-                    if user.is_active:
-                        auth_login(request, user)
-                        return redirect('/shop')
-                else:
-                    return redirect('/shop/login')
-        else:
-            print "password and confirmation password dont match !"
-        return redirect('/shop')
-
-
-def login(request):
-    if (request.method == 'POST'):
-        email = request.POST['email']
-        password = request.POST['password']
-
-        user = authenticate(username=email, password=password)
-
-        if user is not None:
-            if user.is_active:
-                auth_login(request, user)
-                return redirect('/shop')
-        else:
-            return redirect('/shop/register')
-
-        return redirect('/shop')
-    else:
-        return render(request, 'login.html')
-
-
 def contact_create(request):
     if (request.method == 'POST'):
         form = ContactForm(request.POST or None)
@@ -917,8 +736,3 @@ def newStore(request):
         return redirect('/shop')
     else:
         return render(request, 'newStore.html')
-
-
-def logout(request):
-    auth_logout(request)
-    return redirect('/shop')

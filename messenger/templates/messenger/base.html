@@ -1,10 +1,11 @@
 {% load staticfiles i18n %}<!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>AliBaba</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+    <link rel="shortcut icon" href="{% static 'themes/images/ico/favicon.ico' %}">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <link href="{% static 'css/bootcamp.css' %}?v=1" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -24,7 +25,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 </button>
-              <a class="navbar-brand" href="/shop/">Alibaba</a>
+              <a class="navbar-brand" href="/discover/">Alibaba</a>
             </div>
             <div class="collapse navbar-collapse" id="menu">
               <ul class="nav navbar-nav">
@@ -75,7 +76,11 @@
       </main>
       <script src="{% static 'js/notifications.js' %}"></script>
       <script src="{% static 'js/check_messages.js' %}"></script>
+      <script src="{% static 'js/add_new_messages.js' %}"></script>
+      <script src="{% static 'js/change_inbox_user.js' %}"></script>
+      <script src="{% static 'js/messages_on_scroll.js' %}"></script>
+      <script src="{% static 'js/upload_image.js' %}"></script>
+      <script src="{% static 'js/select_and_searsh_products.js' %}"></script>
     {% endblock body %}
-    <script src="{% static 'js/ga.js' %}"></script>
   </body>
 </html>

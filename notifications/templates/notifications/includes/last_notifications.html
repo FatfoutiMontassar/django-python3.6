@@ -1,0 +1,18 @@
+<ul>
+  {% for notification in notifications %}
+    <li class="clearfix">
+
+      {% if notification.from_user.profile.picture %}
+      <img src="/media/{{ notification.from_user.profile.picture}}" class="user-picture">
+      {% else %}
+      <img src="/media/profile_picture/default_profile_picture.png" class="user-picture">
+      {% endif %}
+
+      <p>{{ notification|safe }}</p>
+      <p><small>{{ notification.date }}</small></p>
+    </li>
+  {% empty %}
+    <li style="text-align: center">You have no unread notification</li>
+  {% endfor %}
+    <li style="text-align: center"><a href="/notifications/">See all</a></li>
+</ul>

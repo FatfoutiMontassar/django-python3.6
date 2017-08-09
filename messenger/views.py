@@ -18,8 +18,9 @@ def getMainImage(product):
         img = imgs[0]
     return img
 
-@login_required
 def inbox(request):
+    if not request.user.is_authenticated():
+        return redirect('/shop/')
     conversations = Message.get_conversations(user=request.user)
     active_conversation = None
     messages = None
@@ -30,7 +31,7 @@ def inbox(request):
         user = conversation['user']
 
         for store in user.store_set.all():
-            print store.name
+            #print store.name
             for product in store.product_set.all():
                 products.append((product,getMainImage(product)))
 
@@ -43,13 +44,18 @@ def inbox(request):
                 conversation['unread'] = 0
 
     for store in request.user.store_set.all():
-        print store.name
+        #print store.name
         for product in store.product_set.all():
             products.append((product,getMainImage(product)))
+    #print "messages data type : "  + str(type(messages))
+    newestMessages = []
+    for i in range(0,min(10,len(messages))):
+        newestMessages.append(messages[len(messages)-min(10,len(messages))+i])
 
     context = {
         'products':products,
-        'messages': messages,
+        'numberOfMessages':min(10,len(messages)),
+        'messages': newestMessages,
         'conversations': conversations,
         'active': active_conversation
     }
@@ -58,6 +64,8 @@ def inbox(request):
 
 @login_required
 def messages(request, username):
+    if not request.user.is_authenticated():
+        return redirect('/shop/')
     conversations = Message.get_conversations(user=request.user)
     active_conversation = username
     messages = Message.objects.filter(user=request.user,
@@ -75,21 +83,26 @@ def messages(request, username):
     else:
         print "not ok at all :p"
 
-    print "connected user ..."
-    for store in request.user.store_set.all():
-        print store.name
+    print "other user ..."
+    for store in ouser.store_set.all():
+        #print store.name
         for product in store.product_set.all():
             products.append((product,getMainImage(product)))
 
-    print "other user ..."
-    for store in ouser.store_set.all():
-        print store.name
+    print "connected user ..."
+    for store in request.user.store_set.all():
+        #print store.name
         for product in store.product_set.all():
             products.append((product,getMainImage(product)))
+
+    newestMessages = []
+    for i in range(0,min(10,len(messages))):
+        newestMessages.append(messages[len(messages)-min(10,len(messages))+i])
 
     return render(request, 'messenger/inbox.html', {
         'products':products,
-        'messages': messages,
+        'numberOfMessages':min(10,len(messages)),
+        'messages': newestMessages,
         'conversations': conversations,
         'active': active_conversation
         })
@@ -97,16 +110,19 @@ def messages(request, username):
 
 @login_required
 def new(request):
+    if not request.user.is_authenticated():
+        return redirect('/shop/')
     if request.method == 'POST':
         from_user = request.user
         to_user_username = request.POST.get('to')
-        productId = request.POST.get('productId')
+        #productId = request.POST.get('productId')
         #print str(productId)
-        product = get_object_or_404(Product, id=productId)
+        product = None
+        #product = get_object_or_404(Product, id=productId)
         #print product.name
         try:
             to_user = User.objects.get(username=to_user_username)
-            print("new message has secceffuly found the user..")
+            #print("new message has secceffuly found the user..")
         except Exception:
             try:
                 to_user_username = to_user_username[
@@ -120,7 +136,7 @@ def new(request):
         if len(message.strip()) == 0:
             return redirect('/messages/new/')
 
-        Message.send_message_with_product(from_user, to_user, message,product)
+        Message.send_message(from_user, to_user, message)
 
         return redirect('/messenger/new/')
         #return redirect('/messages/{0}/'.format(to_user_username))
@@ -171,7 +187,7 @@ def send(request):
                     #print pr.name
             msg.save()
             omsg.save()
-            print str(msg.id) + " -- " + str(omsg.id)
+            #print str(msg.id) + " -- " + str(omsg.id)
             return render(request, 'messenger/includes/partial_message.html',
                           {'message': msg})
 
@@ -179,13 +195,67 @@ def send(request):
     else:
         return HttpResponseBadRequest()
 
+def load_more(request):
+    #print("load_more function call ... " + str(request.POST.get('numberOfMessages')))
+    nom = request.POST.get('numberOfMessages')
+    to = request.POST.get('to')
+    required = request.POST.get('required')
+    req = int(required)
+    #print "to : " + str(to)
+    messages = Message.objects.filter(user=request.user,
+                            conversation__username=to)
+    ret = []
+    #print nom + " -- " + to + " -- " + required + " -- " + str(len(messages))
+    for i in range(0,req):
+        if(len(messages)-(int(nom)+i+1) >= 0):
+            #print str(i) + " -- " + str(len(messages))
+            ret.append(messages[len(messages)-(int(nom)+i+1)])
+        else:
+            #print str(i) + " -- " + str(len(messages))
+            break
+    return render(request, 'messenger/includes/partial_message_list.html',
+                  {'messages': reversed(ret) })
+
+def get_products(request):
+    to = request.POST.get('to')
+    ouser = User.objects.get(username=to)
+    ret = []
+
+    for store in ouser.store_set.all():
+        for product in store.product_set.all():
+            ret.append((product,getMainImage(product)))
+
+    for store in request.user.store_set.all():
+        for product in store.product_set.all():
+            ret.append((product,getMainImage(product)))
+
+    return render(request,'messenger/includes/products_list.html',
+                {'values':reversed(ret) } )
+
+def add_new_messages(request):
+    print("add_new_messages function called ...")
+    username = request.POST.get('username')
+    print username
+    active_conversation = username
+    messages = Message.objects.filter(user=request.user,
+                                      conversation__username=username,is_read=False)
+
+    if len(messages) > 0 :
+        message = messages[0]
+        #print message
+        messages.update(is_read=True)
+        return render(request, 'messenger/includes/partial_message.html',
+                  {'message': message})
+    else:
+        return HttpResponse()
+
 def send_image(request):
     #print "hello from send image !!"
     to = request.POST.get('to')
     val = request.POST.get('test')
     to_user = get_object_or_404(User,username=to)
     image = request.FILES.get('picture')
-    print type(image)
+    #print type(image)
     message = "image.."
     msg  = Message.send_message_with_image(request.user ,to_user,message,image)
 

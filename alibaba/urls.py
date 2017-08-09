@@ -20,9 +20,13 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-	url(r'^', include('shop.urls') ),
+	url(r'^', include('discover.urls') ),
 	url(r'^shop/', include('shop.urls') ),
     url(r'^messenger/', include('messenger.urls') ),
+    url(r'^authentication/', include('authentication.urls') ),
+    url(r'^discover/', include('discover.urls') ),
+    url(r'^notifications/', include('notifications.urls') ),
+    url(r'^reactions/', include('reactions.urls') ),
     url(r'^admin/', admin.site.urls),
 ]
 

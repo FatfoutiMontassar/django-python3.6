@@ -74,6 +74,13 @@ class Product(models.Model):
 	def get_absolute_url(self):
 		return reverse('editProduct', kwargs={'id':self.id})
 
+	def get_image(self):
+		img = None
+		imgs = ProductMainImage.objects.filter(product=self).order_by("-created_at")
+		if imgs:
+			img = imgs[0]
+		return img
+
 class ProductMainImage(models.Model):
 	product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
 	img = models.ImageField(null=True,upload_to=renameP)

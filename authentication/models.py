@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 def rename(instance,name):
-	return 'profile_picture/'+instance.user.username + '/'+str(instance.created_at)+name
+	return instance.user.username.replace('@','_')+'/profile/'+str(instance.created_at)+name
 
 
 class Profile(models.Model):
