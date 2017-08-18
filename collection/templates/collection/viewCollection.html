@@ -1,0 +1,38 @@
+{% include 'partials/header.html' %}
+
+{% load static %}
+<div class="row" style="margin-left:40px;margin-top:50px;">
+      <div class="span12" style="border : 1px solid rgb(220,220,220) ;height:300px; background-color:rgb(240,240,240);" >
+        <div class="span4" style="border : 1px solid rgb(220,220,220) ;height:298px;line-height:300px;background-color:black;margin-left:0px;overflow:hidden;">
+          {% if collection.image %}
+            <img src="/media/{{collection.image}}" style="width:100%;vertical-align:middle;" />
+          {% else %}
+            <img src="/media/default.jpg" style="width:100%;vertical-align:middle;" />
+          {% endif %}
+        </div>
+        <div class="span7" style="height:150px;">
+          <h5>Nom:{{collection.name}}</h5>
+          <h5>Date de creation:{{collection.created_at}}</h5>
+          <h5>Description:{{collection.description}}</h5>
+          <h5><strong>Produits:</strong></h5>
+          <div style="border : 1px solid rgb(220,220,220) ;width:100%; height:160px;background-color:rgb(245,245,245);overflow:hidden;overflow-y:scroll;">
+            <table style="margin-left:10px;width:100%;" >
+            {% for product in collection.products.all %}
+              <tr style="border : 1px solid rgb(220,220,220) ;">
+                <td style="height:30px;width:50px;">
+                  <img src="/media/{{product.get_image.img}}" style="height:30px;" />
+                </td>
+                <td>
+                  <a href="/shop/product_details/{{product.id}}/" style="text-decoration:none;">
+                    <h5 style="margin-left:10px;">{{product.name}}</h5>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+            </table>
+          </div>
+        </div>
+      </div>
+</div>
+
+{% include 'partials/footer.html' %}

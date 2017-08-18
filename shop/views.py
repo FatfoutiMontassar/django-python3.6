@@ -1,33 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from datetime import datetime
-
 from django.contrib.auth import authenticate
-
 from django.contrib.auth import login as auth_login, logout as auth_logout
-
 from django.shortcuts import render, redirect
-
 from django.contrib.auth.hashers import make_password
-
 from django.contrib.auth.models import User
-
 from django.http import HttpResponse, Http404
-
 from .models import Product, Store, Contact, StoreImage, ProductMainImage, ProductSecImage , Trader
-
 from .forms import StoreForm, ProductForm, ContactForm, EditProductForm, StoreImageForm, addProductMainImageForm, \
     productSImageForm , TraderForm
 
 from django.shortcuts import get_object_or_404
-
 from django.core.paginator import Paginator
-
 import re
-
 from django.views.generic import RedirectView
-
 import json
 
 # Create your views here.
@@ -58,11 +45,7 @@ def getId(cat):
 
 
 def getMainImage(product):
-    imgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
-    img = None
-    if imgs:
-        img = imgs[0]
-    return img
+    return product.get_image
 
 
 

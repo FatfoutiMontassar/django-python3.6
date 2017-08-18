@@ -11,5 +11,10 @@ from . import views
 urlpatterns = [
     url(r'^register',views.register , name='register'),
 	url(r'^login',views.login , name='login'),
-	url(r'^logout',views.logout , name='logout'),
+    url(r'^logout',views.logout , name='logout'),
+    url(r'^settings/$',views.settings , name='settings'),
+    url(r'^settings/picture/$', views.picture, name='picture'),
+    url(r'^settings/upload_picture/$', views.upload_picture,
+        name='upload_picture'),
+    url(r'^settings/password/$', views.password, name='password'),
 ]

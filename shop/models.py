@@ -31,6 +31,13 @@ class Store(models.Model):
 	def __str__(self):
 		return self.name
 
+	def get_image(self):
+		img = None
+		imgs = StoreImage.objects.filter(store=self).order_by("-created_at")
+		if imgs:
+			img = imgs[0]
+		return img
+
 class Trader(models.Model):
 	user = models.OneToOneField(settings.AUTH_USER_MODEL)
 	statusChoices = (("entreprise","entreprise"),("particulier","particulier"))

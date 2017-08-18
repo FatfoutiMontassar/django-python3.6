@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
-
 from shop.models import Product, Store, Contact, StoreImage, ProductMainImage, ProductSecImage , Trader
-
 from shop.forms import StoreForm, ProductForm, ContactForm, EditProductForm, StoreImageForm, addProductMainImageForm, \
     productSImageForm , TraderForm
 
@@ -168,10 +166,7 @@ def discover(request,idC="0",idP="1"):
     page = pages.page(verifiedId)
 
     for product in page:
-            x = None
-            imgs = ProductMainImage.objects.filter(product=product).order_by("-created_at")
-            if imgs:
-                x = imgs[0]
+            x = product.get_image
             liked  = False
             smiled = False
             wished = False
@@ -207,5 +202,4 @@ def discover(request,idC="0",idP="1"):
         'nC5': getCount(categoriesList[4]),
         'nC6': getCount(categoriesList[5]),
     }
-    # return render(request,'discover',context)
     return render(request, 'discover.html', context)

@@ -1,0 +1,51 @@
+{% include 'partials/header.html' %}
+
+{% load static %}
+<style>
+  table, tr, td {
+    border: 2px solid black;
+  }
+  a {
+    cursor:pointer;
+  }
+</style>
+<center>
+  <table style="margin-top:50px;">
+    {% for collection in collections %}
+    <tr style="background-color:rgb(245,245,245);border: 1px solid black;" collection-id="{{collection.id}}">
+      <td><!-- image -->
+        <div style="height:120px;line-height:120px;width:150px;overflow:hidden;background-color:rgb(220,220,220);">
+          {% if collection.image %}
+          <img src="/media/{{collection.image}}" style="width:150px;" />
+          {% else %}
+          <img src="/media/default.jpg" style="width:150px;" />
+          {% endif %}
+        </div>
+      </td>
+      <td><!-- nom -->
+          <h5>{{collection.name}}</h5>
+      </td>
+      <td style="width:400px;">
+        <h5>{{collection.description}}</h5>
+      </td>
+      <td style="width:80px;">
+        <center>
+          <a style="text-decoration:none;" href="/collections/edit/{{collection.id}}/"><h5>Modifier</h5></a>
+        </center>
+      </td>
+      <td style="width:80px;">
+        <center>
+          <a style="text-decoration:none;" href="/collections/view/{{collection.id}}/"><h5>Voir</h5></a>
+        </center>
+      </td>
+      <td style="width:80px;">
+        <center>
+          <a style="text-decoration:none;" onclick="deleteCollection({{collection.id}});return false;" ><h5>Supprimer</h5></a>
+        </center>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</center>
+
+{% include 'partials/footer.html' %}

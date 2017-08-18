@@ -74,7 +74,7 @@
     <a class="brand" href="/discover"><img src="{% static 'themes/images/logo.png' %}" alt="Bootsshop"/></a>
 
 		<a href="#" id="notifications" data-container="body" data-toggle="popover" data-placement="bottom" title="Notifications" style="margin-left:30px;">
-				<img src="{% static 'themes/images/bell.png' %}" style="width:20px;	"/>
+				<img src="{% static 'themes/images/bell.png' %}" style="width:20px;	margin-top:8px;"/>
 		</a>
 
 		<form class="form-inline navbar-search" method="get" action="{% url 'search' %}" >
@@ -138,8 +138,12 @@
     <span class="caret"></span></button>
 			 <ul class="dropdown-menu">
 				 <li ><a href="{% url 'inbox' %}"><span class="badge pull-right" id="unread-count">0</span> Inbox</a></li>
-				 <li ><a href="">Parametres du compte</a></li>
+				 <li ><a href="/authentication/settings/">Parametres du compte</a></li>
 				 <li><a href="/shop/stores">Tous les boutiques</a></li>
+				 <li><a href="/collections/">Tous les collections</a></li>
+				 <li><a href="/collections/mine/">Mes collections</a></li>
+				 <li><a href="/discounts/">Tous les promotions</a></li>
+				 <li><a href="/discounts/mine/">Mes promotions</a></li>
 				 <li><a href="/messenger/">Messagerie</a></li>
 				 <li><a href="/shop/contact_create">Contacter</a></li>
 				 <li class="divider"></li>

@@ -27,6 +27,8 @@ urlpatterns = [
     url(r'^discover/', include('discover.urls') ),
     url(r'^notifications/', include('notifications.urls') ),
     url(r'^reactions/', include('reactions.urls') ),
+    url(r'^collections/', include('collection.urls') ),
+    url(r'^discounts/', include('discount.urls') ),
     url(r'^admin/', admin.site.urls),
 ]
 

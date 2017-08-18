@@ -1,0 +1,41 @@
+{% include 'partials/header.html' %}
+
+{% load static %}
+<center style="margin-bottom:20px;margin-top:30px;">
+    <a class="btn" href="/discounts/new/"><h5>Creer une nouvelle promotion</h5></a>
+</center>
+<table style="margin-left:100px;">
+    {% for discount in discounts %}
+      <tr style="border: 1px solid black;">
+      {% if discount.discount_type == "P" %}
+        <td>
+          <div style="width:70px;height:70px;line-height:70px;overflow:hidden;background-color:grey;">
+            {% if discount.product.get_image %}
+            <img src="/media/{{discount.product.get_image.img}}" style="width:70px;" />
+            {% else %}
+            <img src="/media/default.jpg" sstyle="width:70px;" />
+            {% endif %}
+          </div>
+        </td>
+        <td>
+          <h5><strong>{{discount.user.username }} has created a discount of {{discount.percentage}}% on product <a style="color:blue;" href="/shop/product_details/{{discount.product.id}}/">{{discount.product.name}}</a> from {{discount.start}} to {{discount.end}}</strong></h5>
+        </td>
+      {% else %}
+      <td >
+        <div style="width:70px;height:70px;line-height:70px;overflow:hidden;background-color:grey;">
+          {% if discount.collection.image %}
+          <img src="/media/{{discount.collection.image}}" style="width:70px;" />
+          {% else %}
+          <img src="/media/default.jpg" style="width:70px;" />
+          {% endif %}
+        </div>
+      </td>
+      <td>
+        <h5><strong>{{discount.user.username }} has created a discount of {{discount.percentage}}% on collection <a style="color:green;" href="/collections/view/{{discount.collection.id}}/">{{discount.collection.name}}</a> from {{discount.start}} to {{discount.end}}</strong></h5>
+      </td>
+      {% endif %}
+      </tr>
+    {% endfor %}
+</table>
+
+{% include 'partials/footer.html' %}

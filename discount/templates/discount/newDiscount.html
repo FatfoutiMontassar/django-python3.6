@@ -1,0 +1,211 @@
+{% include 'partials/header.html' %}
+
+{% load static %}
+
+
+
+<style>
+#list-of-selected-products {
+  height:450px;
+  overflow:hidden;
+  overflow-y:scroll;
+}
+</style>
+<style type="text/css">
+.box {
+width: 80%;
+margin: 0 auto;
+background: rgba(255,255,255,0.2);
+padding: 35px;
+border: 2px solid #fff;
+border-radius: 20px/50px;
+background-clip: padding-box;
+text-align: center;
+}
+.overlay {
+position: fixed;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+background: rgba(0, 0, 0, 0.7);
+transition: opacity 500ms;
+visibility: hidden;
+opacity: 0;
+}
+.overlay:target {
+visibility: visible;
+opacity: 1;
+}
+.popup {
+margin: 70px auto;
+padding: 20px;
+background: #fff;
+border-radius: 5px;
+width: 35%;
+position: relative;
+transition: all 1s ease-in-out;
+}
+.popup h2 {
+margin-top: 0;
+color: #333;
+font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+position: absolute;
+top: 20px;
+right: 30px;
+transition: all 200ms;
+font-size: 30px;
+font-weight: bold;
+text-decoration: none;
+color: #333;
+}
+.popup .close:hover {
+color: #06D85F;
+}
+.popup .content {
+max-height: 30%;
+overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    cursor:pointer;
+}
+
+.list-group-item a {
+  text-decoration:none;
+}
+.list-group-item:hover{
+  background-color: rgb(245,245,245);
+}
+.list-group-item.active {
+  background-color:   #337ab7;
+}
+</style>
+<div class="col-md-3">
+<div id="popupProduits" class="overlay">
+  <div class="popup">
+    <h4>Ajouter des produits a votre promotion.</h4>
+    <a class="close" href="#">&times;</a>
+
+    <input type="text" id="choose-list-search-products" style="width:97%;">
+    <div class="list-group" id="list-of-selected-products">
+      {% for product in products %}
+        {% if product in collectionProducts %}
+          <a class="list-group-item product active" product-id="{{product.id}}" product-name="{{product.name}}" style="text-decoration:none;">
+        {% else %}
+          <a class="list-group-item product" product-id="{{product.id}}" product-name="{{product.name}}" style="text-decoration:none;">
+        {% endif %}
+          <img src="/media/{{ product.get_image.img }}" class="conversation-portrait">
+          {{product.name}}
+        </a>
+      {% endfor %}
+    </div>
+
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div id="popupCollections" class="overlay">
+  <div class="popup">
+    <h4>Ajouter des collections a votre promotion.</h4>
+    <a class="close" href="#">&times;</a>
+
+    <input type="text" id="choose-list-search-collections" style="width:97%;">
+    <div class="list-group" id="list-of-selected-collections">
+      {% for collection in collections %}
+          <a class="list-group-item product" collection-id="{{collection.id}}" collection-name="{{collection.name}}" style="text-decoration:none;">
+          {% if collection.image %}
+          <img src="/media/{{ collection.image }}" class="conversation-portrait">
+          {% else %}
+          <img src="/media/default.jpg" class="conversation-portrait">
+          {% endif %}
+          {{collection.name}}
+        </a>
+      {% endfor %}
+    </div>
+
+</div>
+</div>
+</div>
+
+
+
+<center>
+  <h3>Promotion</h3>
+</center>
+<div class="row" style="margin-left:130px;margin-top:50px;">
+    <div class="span10" style="height:600px;background-color:rgb(240,240,240);border : 2px solid rgb(220,220,220) ;">
+      <form id="form" method="post" style="margin-left:20px;margin-top:30px;">
+        {% csrf_token %}
+        <h5><strong>pourcentage de promotion</strong></h5>
+        <input type="number" name="percentage" min="1" max="100" style="width:210px;" id="percentageValue" required><br>
+        <br>
+
+        <a class="btn" href="#popupProduits" style="width:200px;">Attacher produits</a>
+        <br><br>
+        <a class="btn" href="#popupCollections" style="width:200px;">Attacher collections</a>
+
+        <br>
+        <br>
+        <input type="radio" name="Discount" value="regular" checked><strong>Promotion</strong><br>
+
+        <div class="span10">
+
+          <div class="span4">
+            <h5>Date de debut</h5>
+            <input type="date" name="startDate" />
+          </div>
+
+          <div class="span4">
+            <h5>Date de fin</h5>
+            <input type="date" name="endDate" />
+          </div>
+
+        </div>
+
+        <br><br>
+
+
+        <input type="radio" name="Discount" value="flash" ><strong>Promotion flash</strong><br>
+        <div class="span10">
+          <div class="span4">
+            <h5>Date et temps de debut et fin</h5>
+            <input type="date" name="Date" />
+          </div>
+        </div>
+
+        <div class="span10">
+          <div class="span4">
+            <h5>Temps de debut</h5>
+            <input type="time" name="startTime"/>
+          </div>
+          <div class="span4">
+            <h5>Temps de fin</h5>
+            <input type="time" name="endTime"/>
+          </div>
+        </div>
+        <div id="errorBox" ></div>
+        <a id="preSubmit" style="margin-top:25px;margin-left:60px;width:100px;" class="btn" >Enregistrer</a>
+        <form>
+    </div>
+</div>
+<script src="{% static 'js/discount.js' %}"></script>
+
+{% include 'partials/footer.html' %}
