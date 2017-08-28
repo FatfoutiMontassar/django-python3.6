@@ -11,6 +11,7 @@
     <link href="{% static 'themes/css/base.css' %}" rel="stylesheet" media="screen"/>
 <!-- Bootstrap style responsive -->
 	<link href="{% static 'themes/css/bootstrap-responsive.min.css' %}" rel="stylesheet"/>
+	<link href="{% static 'css/discover.css' %}" rel="stylesheet"/>
 	<link href="{% static 'css/bootcamp.css' %}" rel="stylesheet"/>
 	<link href="{% static 'css/jquery.Jcrop.min.css' %}" rel="stylesheet"/>
 	<link href="{% static 'css/messages.css' %}" rel="stylesheet"/>
@@ -76,7 +77,16 @@
 		<a href="#" id="notifications" data-container="body" data-toggle="popover" data-placement="bottom" title="Notifications" style="margin-left:30px;">
 				<img src="{% static 'themes/images/bell.png' %}" style="width:20px;	margin-top:8px;"/>
 		</a>
+		<div style="width:100px;height:40px;background-color:white;border : 2px solid rgb(220,220,220) ;float:right;margin-top: 12px;">
+				<div style="height:40px;width:50%; overflow:hidden;float:left;">
+				<img src="/media/{{rec1.img}}" style="width:100%;">
+				</div>
 
+				<div style="height:40px;width:50%; overflow:hidden;float:right;">
+				<img src="/media/{{rec2.img}}" style="width:100%;">
+				</div>
+			
+		</div>		
 		<form class="form-inline navbar-search" method="get" action="{% url 'search' %}" >
 		{% if input %}
 			<input class="form-control typeahead" id="q" name="q" type="text" style="margin-top:12px;" value="{{input}}" />
@@ -131,8 +141,8 @@
 
 		 <button type="submit" id="submitButton" class="btn btn-primary">Go</button>
     </form>
-
-	 <ul class="nav navbar-nav navbar-right" style="float:right;margin-right:70px;margin-top:19px;">
+    
+	 <ul class="nav navbar-nav navbar-right" style="float:right;margin-right:30px;margin-top:19px;">
 		 <li class="dropdown">
 			 <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Menu
     <span class="caret"></span></button>
@@ -144,6 +154,7 @@
 				 <li><a href="/collections/mine/">Mes collections</a></li>
 				 <li><a href="/discounts/">Tous les promotions</a></li>
 				 <li><a href="/discounts/mine/">Mes promotions</a></li>
+				 <li><a href="/shop/wishlist">Wishlist</a></li>
 				 <li><a href="/messenger/">Messagerie</a></li>
 				 <li><a href="/shop/contact_create">Contacter</a></li>
 				 <li class="divider"></li>

@@ -3,12 +3,16 @@ from django.shortcuts import render, redirect
 from shop.models import Product, Store, Contact, StoreImage, ProductMainImage, ProductSecImage , Trader
 from shop.forms import StoreForm, ProductForm, ContactForm, EditProductForm, StoreImageForm, addProductMainImageForm, \
     productSImageForm , TraderForm
-
+from django.http import HttpResponse, Http404
+from collection.models import Collection
 from django.core.paginator import Paginator
 from shop import views
 import re
 # Create your views here.
 categoriesList = ["Vetement et accessoires", "Bijoux", "Founiture creatives", "Mariages", "Maison", "Enfant et bebe"]
+from django.shortcuts import get_object_or_404
+from authentication.models import Activity
+import math
 
 def getCountFromList(categorie, tab):
     ret = 0
@@ -45,7 +49,35 @@ def match(str1, str2):
             return True
     return False
 
+def getRecs():
+    ret = []
+    activitys = Activity.objects.all().order_by("-created_at")
+    for activity in activitys:
+        if len(ret) >= 2:
+                break
+        if activity.product:
+            if activity.product.get_image():
+                ret.append(activity.product.get_image())
+        elif activity.store:
+            if activity.store.get_image():
+                ret.append(activity.store.get_image())
+        else:
+            if activity.collection.image:
+                ret.append(activity.collection.image)
+                print(activity.collection.image)
+
+    for store in Store.objects.all():
+        if len(ret) >= 2:
+                break
+        if store.get_image():
+            ret.append( store.get_image() )
+            
+    return ret
+
 def search(request):
+    if not request.user.is_authenticated():
+        return redirect('/authentication/login/')
+
     # print "ok"
     # return redirect('/shop')
     Ptype = request.GET.get('Ptype', 'all')
@@ -109,7 +141,14 @@ def search(request):
     n = len(result)
 
     filters = "?Ptype="+str(Ptype)+"&Pmin="+str(Pmin)+"&Pmax="+str(Pmax)
+    
+    rec = getRecs()
+    rec1 = rec[0]
+    rec2 = rec[1]
+    
     context = {
+        'rec1':rec1,
+        'rec2':rec2,
         'result': reversed(result),
         'n': n,
         'input': str(srchFld),
@@ -130,7 +169,16 @@ def search(request):
     return render(request, 'search.html', context)
 
 
+
 def discover(request,idC="0",idP="1"):
+    if not request.user.is_authenticated():
+        return redirect('/authentication/login/')
+
+    recs = getRecs()
+    '''
+    for i in recs:
+        print(type(i))
+    '''
     #print "hello from discovermore!" + str(id)
 
     Ptype = request.GET.get('Ptype', 'all')
@@ -157,7 +205,7 @@ def discover(request,idC="0",idP="1"):
 
     pages = Paginator(products, 9)
     # print "number of pages : " + str((products.count()+8)/9)
-    intList = list(range(1, ((products.count() + 8) / 9) + 1))
+    intList = list(range(1, math.floor((products.count() + 8) / 9) + 1))
     verifiedId = idP
     values = []
 
@@ -167,6 +215,12 @@ def discover(request,idC="0",idP="1"):
 
     for product in page:
             x = product.get_image
+            if(product.get_discount()):
+                disc = product.get_discount()
+                #print disc.percentage
+            else:
+                print("no discount ...")
+
             liked  = False
             smiled = False
             wished = False
@@ -184,9 +238,17 @@ def discover(request,idC="0",idP="1"):
     for i in intList:
         idList.append(str(i))
 
+    rec = getRecs()
+    rec1 = rec[0]
+    rec2 = rec[1]
+
+    wishedProducts = request.user.profile.wishedProducts.all()
     context = {
+        'rec1':rec1,
+        'rec2':rec2,
         'nPages': pages.num_pages,
         'values': values,
+        'wishedProducts':wishedProducts,
         'pageId': verifiedId,
         'idC':str(idC),
         'page': page,
@@ -203,3 +265,33 @@ def discover(request,idC="0",idP="1"):
         'nC6': getCount(categoriesList[5]),
     }
     return render(request, 'discover.html', context)
+
+
+def addToWishList(request):
+    if not request.user.is_authenticated():
+        return redirect('/authentication/login/')
+
+    tp = request.POST.get('type')
+    id = request.POST.get('id')
+    obj = None
+
+    ret = "added"
+
+    if(tp == "P"):
+        obj = get_object_or_404(Product,id=id)
+        if obj in request.user.profile.wishedProducts.all():
+            request.user.profile.wishedProducts.remove(obj)
+            ret = "removed"
+        else:
+            request.user.profile.wishedProducts.add(obj)
+            ret = "added"
+    else:
+        obj = get_object_or_404(Collection,id=id)
+        if obj in request.user.profile.wishedCollections.all():
+            request.user.profile.wishedCollections.remove(obj)
+            ret = "removed"
+        else:
+            request.user.profile.wishedCollections.add(obj)
+            ret = "added"
+
+    return HttpResponse(ret)

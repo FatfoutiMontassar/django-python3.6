@@ -4,6 +4,9 @@ from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404
 from notifications.models import Notification
+from discover.views import getRecs
+
+
 # Create your views here
 def notifications(request):
     user = request.user
