@@ -10,20 +10,20 @@ from discount.models import Discount
 
 # Create your models here.
 def rename(instance,name):
-	return instance.store.user.username.replace('@','_')+'/'+instance.store.name+'/'+str(instance.store.created_at)+name
+	return instance.table.user.username.replace('@','_')+'/'+instance.table.name+'/'+str(instance.table.created_at)+name
 
 def renameP(instance,name):
-	return instance.product.store.user.username.replace('@','_')+'/'+instance.product.store.name + '/' + instance.product.name + '/' +str(instance.created_at)+name
+	return instance.product.table.user.username.replace('@','_')+'/'+instance.product.table.name + '/' + instance.product.name + '/' +str(instance.created_at)+name
 
-class Store(models.Model):
-	name = models.CharField(max_length=200)
-	description = models.TextField()
-	user = models.ForeignKey(settings.AUTH_USER_MODEL,default=1)
-	visitors = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='stores_visiters')
-	created_at = models.DateTimeField(default=datetime.now, blank=True)
-	phoneNumber = models.CharField(max_length=200,null=True)
-	facebookPage = models.CharField(max_length=200,null=True)
-	locationUrl = models.TextField(null=True)
+class Table(models.Model):
+	name           = models.CharField(max_length=200)
+	description    = models.TextField()
+	user           = models.ForeignKey(settings.AUTH_USER_MODEL,default=1)
+	visitors       = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='tables_visiters')
+	created_at     = models.DateTimeField(default=datetime.now, blank=True)
+	phoneNumber    = models.CharField(max_length=200,null=True)
+	facebookPage   = models.CharField(max_length=200,null=True)
+	locationUrl    = models.TextField(null=True)
 	activationChoices = (
 	    (None, "I do not know now"),
 	    (True, "Yes I acknowledge this"),
@@ -35,7 +35,7 @@ class Store(models.Model):
 
 	def get_image(self):
 		img = None
-		imgs = StoreImage.objects.filter(store=self).order_by("-created_at")
+		imgs = TableImage.objects.filter(table=self).order_by("-created_at")
 		if imgs:
 			img = imgs[0]
 		return img
@@ -43,22 +43,20 @@ class Store(models.Model):
 
 
 class Trader(models.Model):
-	user = models.OneToOneField(settings.AUTH_USER_MODEL)
+	user          = models.OneToOneField(settings.AUTH_USER_MODEL)
 	statusChoices = (("entreprise","entreprise"),("particulier","particulier"))
-	status = models.CharField(max_length=200,null=True,choices = statusChoices)
+	status        = models.CharField(max_length=200,null=True,choices = statusChoices)
 	def __str__(self):
 		return self.user.username
 
 class Product(models.Model):
-	name = models.CharField(max_length=200)
-	price = models.DecimalField(max_digits=8, decimal_places=2)
+	name        = models.CharField(max_length=200)
+	price       = models.DecimalField(max_digits=8, decimal_places=2)
 	description = models.TextField()
-	quantity = models.IntegerField(null=True,default=1)
-	created_at = models.DateTimeField(default=datetime.now, blank=True)
-	likes = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='likes_of_this_product')
-	smiles = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='smiles_of_this_product')
-	wishes = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='wishes_of_this_product')
-	store = models.ForeignKey(Store, on_delete=models.CASCADE,null=True)
+	quantity    = models.IntegerField(null=True,default=1)
+	created_at  = models.DateTimeField(default=datetime.now, blank=True)
+	table       = models.ForeignKey(Table, on_delete=models.CASCADE,null=True)
+	cCategorie  = models.CharField(max_length=200,blank=True,null=True)
 	categorie_choices = (
 		('Vetement et accessoires','Vetement et accessoires')
 		,('Bijoux','Bijoux')
@@ -67,6 +65,7 @@ class Product(models.Model):
 		,('Maison','Maison')
 		,('Enfant et bebe','Enfant et bebe'))
 	categorie = models.CharField(max_length=200,null=True,choices = categorie_choices)
+	# + categorie personnalisé (custom_categorie)
 	activationChoices = (
 	    (None, "I do not know now"),
 	    (True, "Yes I acknowledge this"),
@@ -100,34 +99,38 @@ class Product(models.Model):
 			return None
 
 class albumImage(models.Model):
-	store = models.ForeignKey(Store,on_delete=models.CASCADE,null=True)
-	img = models.ImageField(null=True,upload_to=rename)
+	table      = models.ForeignKey(Table,on_delete=models.CASCADE,null=True)
+	img        = models.ImageField(null=True,upload_to=rename)
 	created_at = models.DateTimeField(default=datetime.now, blank=True)
 
 	def __str__(self):
-		return self.store.name
+		return self.table.name
 
 class ProductMainImage(models.Model):
-	product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
-	img = models.ImageField(null=True,upload_to=renameP)
+	product    = models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
+	img        = models.ImageField(null=True,upload_to=renameP)
 	created_at = models.DateTimeField(default=datetime.now, blank=True)
 
 class ProductSecImage(models.Model):
-	product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
-	img = models.ImageField(null=True,upload_to=renameP)
+	product    = models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
+	img        = models.ImageField(null=True,upload_to=renameP)
 	created_at = models.DateTimeField(default=datetime.now, blank=True)
 
-class StoreImage(models.Model):
-	store = models.ForeignKey(Store, on_delete=models.CASCADE,null=True)
-	img = models.ImageField(null=True,upload_to=rename)
+class TableImage(models.Model):
+	table      = models.ForeignKey(Table, on_delete=models.CASCADE,null=True)
+	img        = models.ImageField(null=True,upload_to=rename)
 	created_at = models.DateTimeField(default=datetime.now, blank=True)
 
 class Contact(models.Model):
-	name = models.CharField(max_length=200)
-	email = models.CharField(max_length=200)
-	subject = models.CharField(max_length=200)
-	text = models.TextField()
+	name       = models.CharField(max_length=200)
+	email      = models.CharField(max_length=200)
+	subject    = models.CharField(max_length=200)
+	text       = models.TextField()
 	created_at = models.DateTimeField(default=datetime.now, blank=True)
 
 	def __str__(self):
 		return self.subject
+
+'''
+class categories():
+'''

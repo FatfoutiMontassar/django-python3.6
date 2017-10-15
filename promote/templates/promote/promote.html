@@ -1,0 +1,136 @@
+<div value="promote">
+
+<style type="text/css">
+.box {
+width: 80%;
+margin: 0 auto;
+background: rgba(255,255,255,0.2);
+padding: 35px;
+border: 2px solid #fff;
+border-radius: 20px/50px;
+background-clip: padding-box;
+text-align: center;
+}
+.overlay {
+position: fixed;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+background: rgba(0, 0, 0, 0.7);
+transition: opacity 500ms;
+visibility: hidden;
+opacity: 0;
+}
+.overlay:target {
+visibility: visible;
+opacity: 1;
+}
+.popup {
+margin: 70px auto;
+padding: 20px;
+background: #fff;
+border-radius: 5px;
+width: 35%;
+position: relative;
+transition: all 1s ease-in-out;
+}
+.popup h2 {
+margin-top: 0;
+color: #333;
+font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+position: absolute;
+top: 20px;
+right: 30px;
+transition: all 200ms;
+font-size: 30px;
+font-weight: bold;
+text-decoration: none;
+color: #333;
+}
+.popup .close:hover {
+color: #06D85F;
+}
+.popup .content {
+max-height: 30%;
+overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: 3px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    cursor:pointer;
+    box-shadow: 1px 1px 1px ;
+}
+
+.list-group-item a {
+  text-decoration:none;
+}
+.list-group-item:hover{
+  background-color: rgb(245,245,245);
+}
+.list-group-item.active {
+  background-color:   #006dcc;
+}
+</style>
+<center>
+	<h4><strong>Promouvoir vos produits et vos collections</strong></h4>
+</center>
+
+		<center>
+		<strong style="font-size: 17px;">Solde : </strong>
+		<input type="number" name="budget" min="1" max="999999" style="width:210px;margin-bottom: 0px;" id="budget" />
+		<a onclick="distributeBudjet(); return false ;" class="btn" >Suivant</a>
+		</center>
+		<br>
+		<div class="list-group" id="list-of-selected-products">
+	        {% for table in user.table_set.all %}
+	        	{% for product in table.product_set.all %}
+			        <a class="list-group-item product" product-id="{{product.id}}" product-name="{{product.name}}" style="text-decoration:none;">
+			          <img src="/media/{{ product.get_image.img }}" class="conversation-portrait">
+			          {{product.name}}
+			        </a>
+	        	{% endfor %}
+	        {% endfor %}
+    	</div>
+</div>
+<script type="text/javascript">
+	$(".list-group-item").click(function(){
+	    // this function will change the state of a product from non selected to selected ..
+	    // and the reverse operation
+	    id = $(this).attr('product-id') ;
+	    //alert("clicked .." + id)
+
+	    if($(this).hasClass('active')){
+	      $(this).removeClass();
+	      $(this).addClass('list-group-item').addClass('product') ;
+	    }else{
+	      $(this).addClass('active') ;
+	    }
+  	});
+  	distributeBudjet = function(){
+  		var selectedProducts = "" ;
+  		$("#list-of-selected-products").children('a').each(function(){
+	      if($(this).hasClass('active')){
+	        product_id = $(this).attr("product-id")
+	        selectedProducts += (product_id + "&")
+	      }
+	    });
+  		alert(selectedProducts) ;
+  	}
+
+</script>

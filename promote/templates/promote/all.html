@@ -1,0 +1,31 @@
+{% include 'partials/header.html' %}
+{% load static %}
+<style type="text/css">
+	table {
+		width:95%;
+		background-color: rgb(220,220,220);
+	}
+	table , tr {
+		text-align: center;
+	}
+	table , tr , td {
+		border: 1px solid black ; 
+	}
+</style>
+<div id="mainBody">
+	<div class="container">
+	<div class="row">
+
+<!-- Sidebar ================================================== -->
+			{% include 'partials/tableSideBar.html' %}
+<!-- Sidebar end=============================================== -->
+			<div class="span9" id="mainSpan">
+				<h4><strong>Hello from settings</strong></h4>  
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="{% static 'js/promote.js' %}"></script>
+{% include 'partials/footer.html' %}
+

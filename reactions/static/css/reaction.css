@@ -33,7 +33,7 @@
 
 .reactions-box {
   height: 44px;
-  width: 165px;
+  width: 225px;
   padding: 10px;
   position: absolute;
   background-color:white;
@@ -70,22 +70,47 @@
   background-image: url("/static/themes/images/reactions_like.png");
 }
 
-.reaction-love {
-  left: 68px;
-  transition-delay: .001s;
-  background-image: url("/static/themes/images/reactions_love.png");
+.reaction-normal {
+  left: 10px;
+  transition-delay: 0s;
+  background-image: url("/static/themes/images/normal.png");
 }
 
-.reaction-haha {
-  left: 126px;
-  transition-delay: .5s;
-  background-image: url("static/themes/images/reactions_haha.png");
+.reaction-smile {
+  left: 68px;
+  transition-delay: .001s;
+  background-image: url("/static/themes/images/smile.png");
 }
+
+.reaction-love {
+  left: 126px;
+  transition-delay: .0015s;
+  background-image: url("/static/themes/images/love.png");
+}
+
+.reaction-wish {
+  left: 184px;
+  transition-delay: .002s;
+  background-image: url("/static/themes/images/wish.png");
+}
+
 
 .reaction-wow {
   left: 126px;
-  transition-delay: .002s;
+  transition-delay: .0015s;
   background-image: url("/static/themes/images/reactions_wow.png");
+}
+
+.reaction-haha {
+  left: 184px;/*184*/
+  transition-delay: .002s;
+  background-image: url("/static/themes/images/reactions_haha.png");
+}
+
+.reaction-sad {
+  left: 380px;
+  transition-delay: .0025s;
+  background-image: url("/static/themes/images/reactions_haha.png");
 }
 
 .reaction-sad {
@@ -135,11 +160,11 @@
   animation-delay: .05s
 }
 
-.like-btn:hover .reaction-haha {
+.like-btn:hover .reaction-wow {
   animation-delay: .1s
 }
 
-.like-btn:hover .reaction-wow {
+.like-btn:hover .reaction-haha {
   animation-delay: .15s
 }
 
@@ -183,10 +208,22 @@
   content: 'Like'
 }
 
+
+/*******************************************/
 .reaction-love::before {
   content: 'Love'
 }
+.reaction-normal::before {
+  content: 'Normal'
+}
+.reaction-smile::before {
+  content: 'Smile'
+}
+.reaction-wish::before {
+  content: 'Wish'
+}
 
+/******************************************/
 .reaction-haha::before {
   content: 'Haha'
 }
@@ -208,6 +245,33 @@
   margin-top: 10px;
 }
 
+/************************************************************************/
+.like-btn-normal{
+  background-image: url("/static/themes/images/reaction-small.png");
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: 0 -134px;
+}
+.like-btn-smile{
+  background-image: url("/static/themes/images/reaction-small.png");
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: 0px -202px;
+}
+.like-btn-love{
+  background-image: url("/static/themes/images/reaction-small.png");
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: 0 -168px;
+}
+.like-btn-wish{
+  background-image: url("/static/themes/images/reaction-small.png");
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: -17px -185px;
+}
+/************************************************************************/
+
 
 .like-btn-like{
   background-image: url("/static/themes/images/reaction-small.png");
@@ -215,16 +279,16 @@
   background-size: auto;
   background-position: -17px -151px;
 }
-
+/*
 .like-btn-love{
   background-image: url("/static/themes/images/reaction-small.png");
   background-repeat: no-repeat;
   background-size: auto;
   background-position: 0 -168px;
 }
-
+*/
 .like-btn-haha{
-  background-image: url('../images/reaction-small.png');
+  background-image: url('/static/themes/images/reaction-small.png');
   background-repeat: no-repeat;
   background-size: auto;
   background-position: 0 -151px;
@@ -254,7 +318,7 @@
 .like-btn-text-like {
   color:rgb(88, 144, 255);
 }
-.like-btn-text-wow,.like-btn-text-haha,.like-btn-text-sad {
+.like-btn-text-wow,.like-btn-text-haha,.like-btn-text-sad,.like-btn-text-smile,.like-btn-text-normal,.like-btn-text-wish {
   color:rgb(240, 186, 21)
 }
 .like-btn-text-love{
@@ -262,6 +326,10 @@
 }
 .like-btn-text-angry{
   color:rgb(247, 113, 75);
+}
+
+.like-btn-text {
+  font-size:10px;
 }
 
 .like-emo > span{

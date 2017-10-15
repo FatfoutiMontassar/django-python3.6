@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from shop.models import Product , Store
+from shop.models import Product , Table
 from notifications.models import Notification
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -17,11 +17,11 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product
-        fields = ('store','name', 'description','price','quantity','categorie','Ptype')
+        fields = ('table','name', 'description','price','quantity','categorie','Ptype')
 
-class StoreSerializer(serializers.HyperlinkedModelSerializer):
+class TableSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Store
+        model = Table
         fields = ('user','name', 'description')
 
 class NotifSerializer(serializers.HyperlinkedModelSerializer):

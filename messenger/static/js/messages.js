@@ -25,7 +25,8 @@ $(function () {
       }
     });
     $("#send").append('<input type="hidden" name="relatedProducts" id="relatedProducts" value="' + selectedProducts + '">')
-    //alert(selectedProducts)
+    console.log("list of selected products goes here ...") ;
+    console.log(selectedProducts) ;
     $.ajax({
       url: '/messenger/send/',
       data: $("#send").serialize(),

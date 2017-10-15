@@ -1,0 +1,7 @@
+table {
+	width:80%;
+	background-color: green;
+}
+table , tr {
+	border :1px solid black ;
+}

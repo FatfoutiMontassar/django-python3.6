@@ -1,7 +1,7 @@
 from django.shortcuts import render , redirect , get_object_or_404
 from django.http import HttpResponse, Http404
 from .models import Collection
-from shop.models import Product , Store
+from shop.models import Product , Table
 from authentication.models import Activity
 from discover.views import getRecs
 
@@ -77,8 +77,8 @@ def editCollections(request,id):
     else:
         collection = get_object_or_404(Collection,id=id)
         ret = []
-        for store in request.user.store_set.all():
-            for pr in store.product_set.all():
+        for table in request.user.table_set.all():
+            for pr in table.product_set.all():
                 ret.append(pr)
         collectionProducts = []
         for pr in collection.products.all():
@@ -120,8 +120,8 @@ def newCollection(request):
         return redirect('/collections')
     else:
         ret = []
-        for store in request.user.store_set.all():
-            for product in store.product_set.all():
+        for table in request.user.table_set.all():
+            for product in table.product_set.all():
                 #print product.name
                 ret.append(product)
         rec = getRecs()

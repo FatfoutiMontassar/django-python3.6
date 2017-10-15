@@ -7,8 +7,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404
-from .models import Product, Store, Contact, StoreImage, ProductMainImage, ProductSecImage , Trader , albumImage
-from .forms import StoreForm, ProductForm, ContactForm, EditProductForm, StoreImageForm, addProductMainImageForm, \
+from .models import Product, Table, Contact, TableImage, ProductMainImage, ProductSecImage , Trader , albumImage
+from .forms import TableForm, ProductForm, ContactForm, EditProductForm, TableImageForm, addProductMainImageForm, \
     productSImageForm , TraderForm , albumImageForm
 from authentication.models import Profile
 #from discover.views import getRecs  
@@ -34,18 +34,18 @@ def getRecs():
         if activity.product:
             if activity.product.get_image():
                 ret.append(activity.product.get_image())
-        elif activity.store:
-            if activity.store.get_image():
-                ret.append(activity.store.get_image())
+        elif activity.table:
+            if activity.table.get_image():
+                ret.append(activity.table.get_image())
         else:
             if activity.collection.image:
                 ret.append(activity.collection.image)
 
-    for store in Store.objects.all():
+    for table in Table.objects.all():
         if len(ret) >= 2:
                 break
-        if store.get_image():
-            ret.append( store.get_image() )
+        if table.get_image():
+            ret.append( table.get_image() )
             
     return ret
 
@@ -76,8 +76,8 @@ def getMainImage(product):
 
 
 
-def getStoreImage(store):
-    imgs = StoreImage.objects.filter(store=store).order_by("-created_at")
+def getTableImage(table):
+    imgs = TableImage.objects.filter(table=table).order_by("-created_at")
     img = None
     if imgs:
         img = imgs[0]
@@ -149,43 +149,43 @@ def album(request, id):
         return render(request, 'album.html', context)
 
 
-def editStore(request, id):
+def editTable(request, id):
     if not request.user.is_authenticated():
         raise Http404
 
-    if (not request.user.id == get_object_or_404(Store, id=id).user.id):
+    if (not request.user.id == get_object_or_404(Table, id=id).user.id):
         raise Http404
 
     if (request.method == 'POST'):
-        form = StoreForm(request.POST or None)
+        form = TableForm(request.POST or None)
 
         if form.is_valid():
-            store = get_object_or_404(Store, id=id)
-            store.name = form.cleaned_data['name']
-            store.description = form.cleaned_data['description']
-            store.phoneNumber = form.cleaned_data['phoneNumber']
-            store.facebookPage = form.cleaned_data['facebookPage']
-            store.locationUrl = form.cleaned_data['locationUrl']
-            store.isActive = form.cleaned_data['isActive']
+            table = get_object_or_404(Table, id=id)
+            table.name = form.cleaned_data['name']
+            table.description = form.cleaned_data['description']
+            table.phoneNumber = form.cleaned_data['phoneNumber']
+            table.facebookPage = form.cleaned_data['facebookPage']
+            table.locationUrl = form.cleaned_data['locationUrl']
+            table.isActive = form.cleaned_data['isActive']
 
             # print product.name
             # print str(product.id)
-            store.save()
-            return redirect('/shop/stores/' + str(id))
+            table.save()
+            return redirect('/shop/tables/' + str(id))
 
     else:
-        store = get_object_or_404(Store, id=id)
-        form = StoreForm(instance=store)
+        table = get_object_or_404(Table, id=id)
+        form = TableForm(instance=table)
         rec = getRecs()
         rec1 = rec[0]
         rec2 = rec[1]
         context = {
             'rec1':rec1,
             'rec2':rec2,
-            'store': store, 
+            'table': table, 
             'form': form, 
         }
-        return render(request, 'editStore.html', context)
+        return render(request, 'editTable.html', context)
 
 
 def duplicateProduct(request, id):
@@ -200,7 +200,7 @@ def duplicateProduct(request, id):
         newimg = ProductMainImage(img=img.img, product=product)
         newimg.save()
 
-    return redirect('/shop/details/' + str(product.store.id))
+    return redirect('/shop/details/' + str(product.table.id))
 
 
 def activateProduct(request, id):
@@ -230,8 +230,8 @@ def addProductMainImage(request, id):
 
 
 def product_details(request, id):
-    recs = getRecs()
-    print("the length of the returned list from getRecs function : ",len(recs))
+    #recs = getRecs()
+    #print("the length of the returned list from getRecs function : ",len(recs))
     product = Product.objects.get(id=id)
 
     if request.user.is_authenticated():
@@ -268,21 +268,21 @@ def product_details(request, id):
     return render(request, 'product_details.html', context)
 
 
-def store_details(request, id):
-    store = Store.objects.get(id=id)
+def table_details(request, id):
+    table = Table.objects.get(id=id)
 
     if request.user.is_authenticated():
-        activity = Activity(user=request.user,store=store)
+        activity = Activity(user=request.user,table=table)
         activity.save()
 
-    form = StoreImageForm()
+    form = TableImageForm()
     rec = getRecs()
     rec1 = rec[0]
     rec2 = rec[1]
     context = {
         'rec1':rec1,
         'rec2':rec2,
-        'store': store,
+        'table': table,
         'form': form,
         'nC1': getCount(categories[0]),
         'nC2': getCount(categories[1]),
@@ -291,14 +291,14 @@ def store_details(request, id):
         'nC5': getCount(categories[4]),
         'nC6': getCount(categories[5]),
     }
-    return render(request, 'store_details.html', context)
+    return render(request, 'table_details.html', context)
 
 
 def editProduct(request, id):
     if not request.user.is_authenticated():
         raise Http404
 
-    if (not request.user.id == get_object_or_404(Product, id=id).store.user.id):
+    if (not request.user.id == get_object_or_404(Product, id=id).table.user.id):
         raise Http404
 
     if (request.method == 'POST'):
@@ -338,7 +338,7 @@ def product_create(request, id):
     if not request.user.is_authenticated():
         raise Http404
 
-    if (not request.user.id == Store.objects.get(id=id).user.id):
+    if (not request.user.id == Table.objects.get(id=id).user.id):
         raise Http404
     else:
         if (request.method == 'POST'):
@@ -347,14 +347,14 @@ def product_create(request, id):
             #print form
             if form.is_valid():
                 instance = form.save(commit=False)
-                store = Store.objects.get(id=id)
+                table = Table.objects.get(id=id)
                 # print instance
-                instance.store = store
+                instance.table = table
                 instance.isActive = False
                 instance.save()
             return redirect('/shop/details/' + id)
         else:
-            store = Store.objects.get(id=id)
+            table = Table.objects.get(id=id)
             form = ProductForm()
             rec = getRecs()
             rec1 = rec[0]
@@ -363,49 +363,49 @@ def product_create(request, id):
                 'rec1':rec1,
                 'rec2':rec2,
                 'form': form,
-                'store': store,
+                'table': table,
             }
-            # print store.name
+            # print table.name
             return render(request, 'product_form.html', context)
 
-def store_create(request,comment):
+def table_create(request,comment):
     if not request.user.is_authenticated():
         raise Http404
     else:
         if (request.method == 'POST'):
             if(str(comment) == "ok"):
-                form = StoreForm(request.POST or None, request.FILES or None)
+                form = TableForm(request.POST or None, request.FILES or None)
                 # print form.errors
                 if form.is_valid():
                     instance = form.save(commit=False)
-                    if (Store.objects.filter(name=instance.name).filter(user=request.user).exists()):
-                        form = StoreForm()
+                    if (Table.objects.filter(name=instance.name).filter(user=request.user).exists()):
+                        form = TableForm()
                         context = {
                             'form': form,
-                            'error_message': "Error !! you have already created a store with the same name",
+                            'error_message': "Error !! you have already created a table with the same name",
                         }
-                        return render(request, 'store_form.html', context)
+                        return render(request, 'table_form.html', context)
                     else:
                         instance.user = request.user
                         instance.save()
-                        return redirect('/shop/stores')
+                        return redirect('/shop/tables')
                 else:
-                    form = StoreForm()
+                    form = TableForm()
 
                     context = {
                         'form': form,
                         'error_message': "Error !! form is not valid",
                     }
-                    return render(request, 'store_form.html', context)
+                    return render(request, 'table_form.html', context)
             elif(str(comment) == "addStatus"):
                 form = TraderForm(request.POST or None)
                 if form.is_valid:
                     instance = form.save(commit=False)
                     instance.user = request.user
                     instance.save()
-                    return redirect('/shop/store_create/verifyFirst')
+                    return redirect('/shop/table_create/verifyFirst')
                 else:
-                    return redirect('/shop/stores/')
+                    return redirect('/shop/tables/')
             else:
                 raise Http404
 
@@ -414,7 +414,7 @@ def store_create(request,comment):
             rec1 = rec[0]
             rec2 = rec[1]
             if not hasattr(request.user,'trader'):
-                additional = "this is your first store !! please select your status"
+                additional = "this is your first table !! please select your status"
                 form = TraderForm()
                 context = {
                     'rec1':rec1,
@@ -422,21 +422,21 @@ def store_create(request,comment):
                     'form': form,
                     'additional':additional,
                 }
-                return render(request, 'store_form.html', context)
+                return render(request, 'table_form.html', context)
             else:
-                form = StoreForm()
+                form = TableForm()
                 context = {
                     'rec1':rec1,
                     'rec2':rec2,
                     'form': form,
                 }
-                return render(request, 'store_form.html', context)
+                return render(request, 'table_form.html', context)
 
-def storesView(request):
-    stores = Store.objects.all()[:18]
+def tablesView(request):
+    tables = Table.objects.all()[:18]
     values = []
-    for store in stores:
-        values.append((store, getStoreImage(store)))
+    for table in tables:
+        values.append((table, getTableImage(table)))
     
     rec = getRecs()
     rec1 = rec[0]
@@ -453,7 +453,7 @@ def storesView(request):
         'nC5': getCount(categoriesList[4]),
         'nC6': getCount(categoriesList[5]),
     }
-    return render(request, 'stores.html', context)
+    return render(request, 'tables.html', context)
 
 
 def product(request, id):
@@ -494,23 +494,23 @@ def addProduct(request, id):
         description = request.POST['description']
         imgUrl = request.POST['imgUrl']
 
-        store = Store.objects.get(id=id)
+        table = Table.objects.get(id=id)
 
-        product = Product(name=name, price=price, storeName=store.name, description=description, imgUrl=imgUrl)
+        product = Product(name=name, price=price, tableName=table.name, description=description, imgUrl=imgUrl)
         product.save()
 
         return redirect('/shop/details/' + id)
     else:
-        store = Store.objects.get(id=id)
+        table = Table.objects.get(id=id)
         rec = getRecs()
         rec1 = rec[0]
         rec2 = rec[1]
         context = {
             'rec1':rec1,
             'rec2':rec2,
-            'store': store,
+            'table': table,
         }
-        print(store.name)
+        print(table.name)
         return render(request, 'addProduct.html', context)
 
 
@@ -523,8 +523,8 @@ def details(request, id,idP="1"):
     Prange = request.GET.get('Prange', 'all')
     #print Prange
 
-    store = Store.objects.get(id=id)
-    products = store.product_set.all().order_by("-created_at")
+    table = Table.objects.get(id=id)
+    products = table.product_set.all().order_by("-created_at")
 
     Pmin = request.GET.get('Pmin',0)
     Pmax = request.GET.get('Pmax',10000)
@@ -548,8 +548,8 @@ def details(request, id,idP="1"):
         products = products.filter(price__lte=100000)
 
     nP = products.count()
-    form = StoreImageForm()
-    imgs = StoreImage.objects.filter(store=store).order_by("-created_at")
+    form = TableImageForm()
+    imgs = TableImage.objects.filter(table=table).order_by("-created_at")
     pages = Paginator(products, 9)
     vId = int(idP)
     if( ( vId > int((nP+8)/9) ) or (vId < 1) ):
@@ -573,7 +573,7 @@ def details(request, id,idP="1"):
     context = {
         'rec1':rec1,
         'rec2':rec2,
-        'store': store,
+        'table': table,
         'values': values,
         'form': form,
         'page': page,
@@ -600,23 +600,23 @@ def details(request, id,idP="1"):
     #print str(id)
     return render(request, 'details.html', context)
 
-def storesAlbum(request,id):
+def tablesAlbum(request,id):
     if(request.method == 'POST'):
         form = albumImageForm(request.POST or None, request.FILES or None)
         if form.is_valid():
             instance = form.save(commit=False)
-            instance.store = Store.objects.get(id=id)
+            instance.table = Table.objects.get(id=id)
             instance.save()
-            return redirect('/shop/storesAlbum/' + str(id))
+            return redirect('/shop/tablesAlbum/' + str(id))
         else:
             #print "error !!"
             # print form.errors
-            return redirect('/shop/storesAlbum/' + str(id))
-        return redirect(request, '/shop/storesAlbum/' + str(id))
+            return redirect('/shop/tablesAlbum/' + str(id))
+        return redirect(request, '/shop/tablesAlbum/' + str(id))
     else:
         form = albumImageForm()
-        store = get_object_or_404(Store,id=id)
-        imgs = albumImage.objects.filter(store=store)
+        table = get_object_or_404(Table,id=id)
+        imgs = albumImage.objects.filter(table=table)
         rec = getRecs()
         rec1 = rec[0]
         rec2 = rec[1]
@@ -656,25 +656,25 @@ def view(request, id,idP="1"):
     Prange = request.GET.get('Prange', 'all')
     #print Prange
 
-    store = Store.objects.get(id=id)
+    table = Table.objects.get(id=id)
 
 
     if request.user.is_authenticated():
-        activity = Activity(user=request.user,store=store)
+        activity = Activity(user=request.user,table=table)
         activity.save()
 
-    # send message to store's owner
-    if request.user != store.user:
-        if(not (request.user in store.visitors.all())):
+    # send message to table's owner
+    if request.user != table.user:
+        if(not (request.user in table.visitors.all())):
             print("visit ...")
-            message = "This is an automatically generated message, welcome to my store ( " + str(store.name) + " ) , if you have any questions, please feel free :) "
-            if store.user.profile.message != None:
-                message = str(store.user.profile.message)
-            msg = Message.send_message(store.user,request.user,message).save()
-            store.visitors.add(request.user)
+            message = "This is an automatically generated message, welcome to my table ( " + str(table.name) + " ) , if you have any questions, please feel free :) "
+            if table.user.profile.message != None:
+                message = str(table.user.profile.message)
+            msg = Message.send_message(table.user,request.user,message).save()
+            table.visitors.add(request.user)
 
 
-    products = store.product_set.all().order_by("-created_at")
+    products = table.product_set.all().order_by("-created_at")
 
     Pmin = request.GET.get('Pmin',0)
     Pmax = request.GET.get('Pmax',10000)
@@ -688,7 +688,7 @@ def view(request, id,idP="1"):
         products = products.filter(Ptype=2)
 
     nP = products.count()
-    imgs = StoreImage.objects.filter(store=store).order_by("-created_at")
+    imgs = TableImage.objects.filter(table=table).order_by("-created_at")
     pages = Paginator(products, 9)
     vId = int(idP)
     if( ( vId > int((nP+8)/9) ) or (vId < 1) ):
@@ -714,7 +714,7 @@ def view(request, id,idP="1"):
         'rec1':rec1,
         'rec2':rec2,
         'flag':'yes',
-        'store': store,
+        'table': table,
         'values': values,
         'page': page,
         'nP': nP,
@@ -739,42 +739,42 @@ def view(request, id,idP="1"):
     return render(request, 'discover.html', context)
 
 
-def addStoreImage(request, id):
-    form = StoreImageForm(request.POST or None, request.FILES or None)
+def addTableImage(request, id):
+    form = TableImageForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.store = Store.objects.get(id=id)
+        instance.table = Table.objects.get(id=id)
         instance.save()
-        return redirect('/shop/stores')
+        return redirect('/shop/tables')
     else:
         print("error !!")
         #print form.errors
         # print form.errors
-        return redirect('/shop/stores')
+        return redirect('/shop/tables')
 
 
-def deleteStore(request, id):
-    Store.objects.filter(id=id).delete()
+def deleteTable(request, id):
+    Table.objects.filter(id=id).delete()
     return redirect('/shop')
 
 
 def deleteProduct(request, id):
     #print "delete : " + str(id)
     product = Product.objects.get(id=id)
-    store = product.store
+    table = product.table
     Product.objects.filter(id=id).delete()
-    return redirect('/shop/details/' + str(store.id))
+    return redirect('/shop/details/' + str(table.id))
 
 
-def newStore(request):
+def newTable(request):
     if (request.method == 'POST'):
         name = request.POST['name']
         description = request.POST['description']
         imgUrl = request.POST['imgUrl']
 
-        store = Store(name=name, description=description, img=imgUrl)
-        store.save()
+        table = table(name=name, description=description, img=imgUrl)
+        table.save()
 
         return redirect('/shop')
     else:
-        return render(request, 'newStore.html')
+        return render(request, 'newTable.html')

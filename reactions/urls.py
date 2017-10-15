@@ -10,7 +10,8 @@ from . import views
 
 urlpatterns = [
     url(r'^reactionRemove/(?P<id>\w{0,50})/$', views.reactionRemove , name='reactionRemove' ),
-	url(r'^reactionLike/(?P<id>\w{0,50})/$', views.reactionLike , name='reactionLike' ),
+	url(r'^reactionNormal/(?P<id>\w{0,50})/$', views.reactionNormal , name='reactionNormal' ),
+	url(r'^reactionSmile/(?P<id>\w{0,50})/$', views.reactionSmile , name='reactionSmile' ),
 	url(r'^reactionLove/(?P<id>\w{0,50})/$', views.reactionLove , name='reactionLove' ),
-	url(r'^reactionWow/(?P<id>\w{0,50})/$', views.reactionWow , name='reactionWow' ),
+	url(r'^reactionWish/(?P<id>\w{0,50})/$', views.reactionWish , name='reactionWish' ),
 ]

@@ -1,6 +1,6 @@
 from django.shortcuts import render , redirect , get_object_or_404
 from django.http import HttpResponse, Http404
-from shop.models import Product , Store
+from shop.models import Product , Table
 from collection.models import Collection
 from discount.models import Discount
 from datetime import datetime
@@ -117,8 +117,8 @@ def newDiscount(request):
         return redirect('/discounts/')
     else:
         pro = []
-        for store in request.user.store_set.all():
-            for pr in store.product_set.all():
+        for table in request.user.table_set.all():
+            for pr in table.product_set.all():
                 pro.append(pr)
 
         col = []

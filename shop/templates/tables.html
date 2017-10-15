@@ -1,0 +1,63 @@
+{% include 'partials/header.html' %}
+
+{% load static %}
+
+<center>
+	{% if user.is_authenticated %}
+		<h4 style="margin-top:25px;"><a class="btn" href="/shop/table_create/verifyFirst/">Créer une nouvelle table</a></h4>
+	{% else %}
+		<h4 style="margin-top:25px;">Vous devez etre connecté avec un compte commercant pour pouvoir créer des tables.</h4>
+	{% endif %}
+
+
+</center><br>
+
+<div id="mainBody">
+	<div class="container">
+	<div class="row">
+
+<!-- Sidebar ================================================== -->
+{% include 'partials/sidebar.html' %}
+</div>
+<!-- Sidebar end=============================================== -->
+	<div class="span9" id="mainSpan">
+		<h4>Tables</h4>
+			  <ul class="thumbnails">
+
+				{% for table , img in values %}
+					{% if table.isActive == True %}
+				<li class="span3" >
+				  <div class="thumbnail" style="height:270px;">
+					<a  href="/shop/view/{{table.id}}">
+						{% if img %}
+						<img style="width:180px;height:140px;" src="/media/{{ img.img }}" alt=""/>
+						{% else %}
+						<img style="width:180px;height:140px;" src="/media/default.jpg" alt=""/>
+						{% endif %}
+					</a>
+
+					<div class="caption" style="width:100%; padding:0; bottom:0; border:0; position:absolute; ">
+					  <h5>{{table.name}}</h5>
+
+					  <h4 style="text-align:center;">
+						 <a class="btn" href="/shop/view/{{table.id}}" ><i class="icon-zoom-in"></i></a>
+					   <a class="btn" href="/shop/details/{{table.id}}">Visit Table</a>
+						 <a class="btn" href="/shop/editTable/{{table.id}}"><img src="{% static '/themes/images/editProduct.png' %}" style="height:18px;" title="Edit Table"></a>
+						 <a class="btn" href="/shop/tablesAlbum/{{table.id}}"><img src="{% static '/themes/images/salbum.png' %}" style="height:18px;" title="table's album"></a>
+						 <!--
+						 <a class="btn" href="/shop/deleteTable/{{table.id}}"><img src="{% static 'themes/images/removeElement.png' %}" style="height:18px;" title="Delete Shop"></a>
+					 	 -->
+						</h4>
+					</div>
+
+					</div>
+				</li>
+						{% endif %}
+			  	{% endfor %}
+
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% include 'partials/footer.html' %}

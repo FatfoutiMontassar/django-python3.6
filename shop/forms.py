@@ -1,9 +1,9 @@
 from django import forms
-from .models import Store, Product , Contact , StoreImage , ProductMainImage , ProductSecImage , Trader , albumImage
+from .models import Table, Product , Contact , TableImage , ProductMainImage , ProductSecImage , Trader , albumImage
 
-class StoreForm(forms.ModelForm):
+class TableForm(forms.ModelForm):
     class Meta:
-        model = Store
+        model = Table
         fields = ["name","description","phoneNumber","facebookPage","locationUrl","isActive"]
 
 class ProductForm(forms.ModelForm):
@@ -11,9 +11,9 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ["name","price","categorie","description","quantity","isActive","Ptype"]
 
-class StoreImageForm(forms.ModelForm):
+class TableImageForm(forms.ModelForm):
     class Meta:
-        model = StoreImage
+        model = TableImage
         fields = ["img"]
 
 class albumImageForm(forms.ModelForm):

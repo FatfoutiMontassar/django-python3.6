@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from shop.models import Product , Store
+from shop.models import Product , Table
 from rest_framework import generics
 from notifications.models import Notification
-from quickstart.serializers import UserSerializer, GroupSerializer , ProductSerializer , StoreSerializer , NotifSerializer , AllNotifSerializer
+from quickstart.serializers import UserSerializer, GroupSerializer , ProductSerializer , TableSerializer , NotifSerializer , AllNotifSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -27,12 +27,12 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-class StoreViewSet(viewsets.ModelViewSet):
+class TableViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Store.objects.all()
-    serializer_class = StoreSerializer
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
 
 class NotifViewSet(viewsets.ModelViewSet):
     """

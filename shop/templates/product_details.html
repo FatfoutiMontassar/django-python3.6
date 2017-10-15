@@ -81,7 +81,7 @@ function Edit() {
 				<img src="/media/default.jpg" style="border: 1px solid black; maring:0; width:100%"/>
 				{% endif %}
 
-				{% if product.store.user == user %}
+				{% if product.table.user == user %}
 
 				<button onclick="myFunction()" id="bshow">Changer l'image</button>
 				<div id="myDIV" style="display:none;">
@@ -104,7 +104,7 @@ function Edit() {
 					<h5><strong>Name: </strong>{{product.name}}</h5>
 					<h5><strong>Price: </strong>{{product.price}}</h5>
 					<h5><strong>Quantity: </strong>{{product.quantity}}</h5>
-					<h5><strong>Store: </strong>{{product.store.name}}</h5>
+					<h5><strong>Table: </strong>{{product.table.name}}</h5>
 					<h5><strong>Categorie: </strong>{{product.categorie}}</h5>
 					{% if product.Ptype == 1 %}
 						<h5><strong>Type: </strong>Faits main</h5>
@@ -117,7 +117,7 @@ function Edit() {
 				<br>
 				<br>
 				<form action="/messenger/new/" method="GET">
-					<input id="to" name="to" type="hidden" value="{{product.store.user.username}}" >
+					<input id="to" name="to" type="hidden" value="{{product.table.user.username}}" >
 					<input id="productId" name="productId" type="hidden" value="{{product.id}}" >
 					<button type="submit">Demander Une Question</button>
 				</form>

@@ -52,7 +52,7 @@
 
 				<ul class="thumbnails">
 
-				{% for product , Pimg , liked , smiled , wished , sum in values %}
+				{% for product , Pimg , normal , smile , love , wish , sum in values %}
 							<li class="span3" product-id="{{ product.id }}" csrf="{{ csrf_token }}" discounts="{{product.get_discount.percentage}}" >
 							<div class="thumbnail" style="height:355px;position:relative;">
 							{% if product.get_discount %}
@@ -70,7 +70,7 @@
 								{% endif %}
 							</div>
 							{% endif %}
-							<a  style="height:210px; overflow:hidden;margin-top:5px;z-index: 1;">
+							<a  style="height:210px; overflow:hidden;margin-top:5px;z-index: 1;" href="/shop/product_details/{{product.id}}">
 								{% if Pimg %}
 									<img src="/media/{{product.get_image.img}}" style="width:100%;" alt=""/>
 								{% else %}
@@ -78,7 +78,7 @@
 								{% endif %}
 							</a>
 							<div class="caption" style="bottom:0px; position: absolute; width:90%">
-								<h5>{{product.store.name}}: {{product.name}}</h5>
+								<h5>{{product.table.name}}: {{product.name}}</h5>
 								<center>
 									<div style="height:27px;width:70px;">
 											{% if product in wishedProducts %}
@@ -95,28 +95,34 @@
 							 <!-- start like block -->
 							 	<h4 style="text-align:center;">
 									<span class="like-btn" style="font-size:14px; text-align:left;text-decoration:none;" product-id="{{product.id}}" csrf="{{ csrf_token }}"> <!-- Default like button -->
-										{% if liked %}
-											<span class="like-btn-emo like-btn-like"></span> <!-- Default like button emotion-->
-											<span class="like-btn-text like-btn-text-like active">Like</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
-										{% elif smiled %}
+										{% if normal %}
+											<span class="like-btn-emo like-btn-normal"></span> <!-- Default like button emotion-->
+											<span class="like-btn-text like-btn-text-normal active">Normal</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
+										{% elif smile %}
+											<span class="like-btn-emo like-btn-smile"></span> <!-- Default like button emotion-->
+											<span class="like-btn-text like-btn-text-smile active">Smile</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
+										{% elif love %}
 											<span class="like-btn-emo like-btn-love"></span> <!-- Default like button emotion-->
 											<span class="like-btn-text like-btn-text-love active">Love</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
-										{% elif wished %}
-											<span class="like-btn-emo like-btn-wow"></span> <!-- Default like button emotion-->
-											<span class="like-btn-text like-btn-text-wow active">Wow</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
+										{% elif wish %}
+											<span class="like-btn-emo like-btn-wish"></span> <!-- Default like button emotion-->
+											<span class="like-btn-text like-btn-text-wish active">Wish</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
 										{% else %}
 											<span class="like-btn-emo like-btn-default"></span> <!-- Default like button emotion-->
 											<span class="like-btn-text">Like</span> <!-- Default like button text,(Like, wow, sad..) default:Like  -->
 										{% endif %}
 											<ul class="reactions-box"> <!-- Reaction buttons container-->
-												<li class="reaction reaction-like" data-reaction="Like"></li>
+												<li class="reaction reaction-normal" data-reaction="Normal"></li>
+												<li class="reaction reaction-smile" data-reaction="Smile"></li>
 												<li class="reaction reaction-love" data-reaction="Love"></li>
-												<li class="reaction reaction-wow" data-reaction="Wow"></li>
+												<li class="reaction reaction-wish" data-reaction="Wish"></li>
 											</ul>
 											<span style="font-size:12px;margin-right:5px;" class="like-count">{{sum}}</span>
 									</span>
-									<a class="btn" href="/shop/product_details/{{product.id}}">VIEW</a>
-									<a class="btn btn-primary">{{product.price}} Dt</a>
+									<div style="float: right;">
+										<a class="btn" href="/shop/product_details/{{product.id}}">VIEW</a>
+										<a class="btn btn-primary">{{product.price}} Dt</a>
+									</div>
 								</h4>
 							</div>
 							</div>
@@ -129,9 +135,9 @@
             <ul>
                  {% if page.has_previous %}
 										{% if idC %}
-											<li><a href="/shop/view/{{store.id}}/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
+											<li><a href="/shop/view/{{table.id}}/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
 										{% else %}
-											<li><a href="/shop/view/{{store.id}}/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
+											<li><a href="/shop/view/{{table.id}}/{{page.previous_page_number}}/{{filters}}" >&lang;</a></li>
 										{% endif %}
                   {% else %}
                     <li><a>&lang;</a></li>
@@ -142,18 +148,18 @@
                     <li><a class="active" >{{id}}</a></li>
                   {% else %}
 										{% if idC %}
-											<li><a href="/shop/view/{{store.id}}/{{id}}/{{filters}}">{{id}}</a></li>
+											<li><a href="/shop/view/{{table.id}}/{{id}}/{{filters}}">{{id}}</a></li>
 										{% else %}
-											<li><a href="/shop/view/{{store.id}}/{{id}}/{{filters}}">{{id}}</a></li>
+											<li><a href="/shop/view/{{table.id}}/{{id}}/{{filters}}">{{id}}</a></li>
 										{% endif %}
                   {% endif %}
                 {% endfor %}
 
                 {% if page.has_next  %}
 										{% if idC %}
-											<li><a href="/shop/view/{{store.id}}/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
+											<li><a href="/shop/view/{{table.id}}/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
 										{% else %}
-											<li><a href="/shop/view/{{store.id}}/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
+											<li><a href="/shop/view/{{table.id}}/{{page.next_page_number}}/{{filters}}">&rang;</a></li>
 										{% endif %}
                 {% else %}
                     <li><a>&rang;</a></li>

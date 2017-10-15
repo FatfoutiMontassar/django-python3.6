@@ -9,9 +9,10 @@ $(document).ready(function(){
     //alert("product id : " + id)
     var data_reaction = $(this).attr("data-reaction");
     var function2call ;
-    if(data_reaction == "Like")function2call = "/reactions/reactionLike/" ;
-    if(data_reaction == "Love")function2call = "/reactions/reactionLove/" ;
-    if(data_reaction == "Wow" )function2call = "/reactions/reactionWow/"  ;
+    if(data_reaction == "Normal")function2call = "/reactions/reactionNormal/" ;
+    if(data_reaction == "Smile")function2call = "/reactions/reactionSmile/" ;
+    if(data_reaction == "Love" )function2call = "/reactions/reactionLove/"  ;
+    if(data_reaction == "Wish" )function2call = "/reactions/reactionWish/"  ;
 
 
     $.ajax({
@@ -24,7 +25,7 @@ $(document).ready(function(){
       cache: false,
       success: function (data) {
         $(".like-btn-emo" , span).removeClass().addClass('like-btn-emo').addClass('like-btn-'+data_reaction.toLowerCase());
-      	$(".like-btn-text" , span).text(data_reaction).removeClass().addClass('like-btn-text').addClass('like-btn-text-'+data_reaction.toLowerCase()).addClass("active");;
+      	$(".like-btn-text" , span).text(data_reaction).removeClass().addClass('like-btn-text').addClass('like-btn-text-'+data_reaction.toLowerCase()).addClass("active");
         $(".like-count", span).text(data);
       	if(data_reaction == "Like")
       	  $(".like-emo" , span).html('<span class="like-btn-like"></span>');

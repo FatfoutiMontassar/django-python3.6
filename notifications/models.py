@@ -12,25 +12,39 @@ import shop
 
 @python_2_unicode_compatible
 class Notification(models.Model):
-    LIKED = 'L'
-    LOVED = 'O'
-    WISHED = 'W'
-    NOTIFICATION_TYPES = (
-        (LIKED, 'Liked'),
-        (LOVED, 'Loved'),
-        (WISHED, 'Wished'),
-        )
+    
+    NORMAL      = 'normal'
+    SMILE       = 'smile'
+    LOVE        = 'love'
+    WISH        = 'wish'
 
-    _LIKED_TEMPLATE = '<a href="/messenger/{0}/">{1}</a> liked your product: <a href="/shop/product_details/{2}/">{3}</a>'  # noqa: E501
-    _LOVED_TEMPLATE = '<a href="/messenger/{0}/">{1}</a> loved your product: <a href="/shop/product_details/{2}/">{3}</a>'  # noqa: E501
-    _WISHED_TEMPLATE = '<a href="/messenger/{0}/">{1}</a> wished your product: <a href="/shop/product_details/{2}/">{3}</a>'  # noqa: E501
+    LIKE        = 'like'
+    DISLIKE     = 'dislike'
 
-    from_user = models.ForeignKey(User, related_name='+')
-    to_user = models.ForeignKey(User, related_name='+')
-    date = models.DateTimeField(auto_now_add=True)
-    notification_type = models.CharField(max_length=1,choices=NOTIFICATION_TYPES)
-    is_read = models.BooleanField(default=False)
-    product = models.ForeignKey('shop.Product', null=True,related_name="related_product")
+    CHOICES = (
+        (NORMAL, NORMAL),
+        (SMILE, SMILE),
+        (LOVE, LOVE),
+        (WISH, WISH),
+        (LIKE, LIKE),
+        (DISLIKE, DISLIKE),
+    )
+
+    _NORMAL_TEMPLATE  = '<a href="/messenger/{0}/">{1}</a> reacted to your product: <a href="/shop/product_details/{2}/">{3}</a>'  # noqa: E501
+    _SMILE_TEMPLATE   = '<a href="/messenger/{0}/">{1}</a> reacted to your product: <a href="/shop/product_details/{2}/">{3}</a>'  # noqa: E501
+    _LOVE_TEMPLATE    = '<a href="/messenger/{0}/">{1}</a> reacted to your product: <a href="/shop/product_details/{2}/">{3}</a>'  # noqa: E501
+    _WISH_TEMPLATE    = '<a href="/messenger/{0}/">{1}</a> reacted to your product: <a href="/shop/product_details/{2}/">{3}</a>'  # noqa: E501
+
+
+    _LIKE_TEMPLATE    = "none" 
+    _DISLIKE_TEMPLATE = "none"
+
+    from_user         = models.ForeignKey(User, related_name='+')
+    to_user           = models.ForeignKey(User, related_name='+')
+    date              = models.DateTimeField(auto_now_add=True)
+    notification_type = models.CharField(max_length=1,choices=CHOICES)
+    is_read           = models.BooleanField(default=False)
+    product           = models.ForeignKey('shop.Product', null=True,related_name="related_product")
 
     class Meta:
         verbose_name = 'Notification'
@@ -38,22 +52,29 @@ class Notification(models.Model):
         ordering = ('-date',)
 
     def __str__(self):
-        if self.notification_type == self.LIKED:
-            return self._LIKED_TEMPLATE.format(
+        if self.notification_type == self.NORMAL:
+            return self._NORMAL_TEMPLATE.format(
                 escape(self.from_user.username),
                 escape(self.from_user.username),
                 self.product.pk,
                 escape(self.get_summary(self.product.name))
                 )
-        elif self.notification_type == self.LOVED:
-            return self._LOVED_TEMPLATE.format(
+        elif self.notification_type == self.SMILE:
+            return self._SMILE_TEMPLATE.format(
                 escape(self.from_user.username),
                 escape(self.from_user.username),
                 self.product.pk,
                 escape(self.get_summary(self.product.name))
                 )
-        elif self.notification_type == self.WISHED:
-            return self._WISHED_TEMPLATE.format(
+        elif self.notification_type == self.LOVE:
+            return self._LOVE_TEMPLATE.format(
+                escape(self.from_user.username),
+                escape(self.from_user.username),
+                self.product.pk,
+                escape(self.get_summary(self.product.name))
+                )
+        elif self.notification_type == self.WISH:
+            return self._WISH_TEMPLATE.format(
                 escape(self.from_user.username),
                 escape(self.from_user.username),
                 self.product.pk,

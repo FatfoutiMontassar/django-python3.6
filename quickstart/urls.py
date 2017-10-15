@@ -9,7 +9,7 @@ from rest_framework import generics
 from django.conf.urls.static import static
 from notifications.models import Notification
 from . import views
-from quickstart.serializers import UserSerializer, GroupSerializer , ProductSerializer , StoreSerializer , NotifSerializer , AllNotifSerializer
+from quickstart.serializers import UserSerializer, GroupSerializer , ProductSerializer , TableSerializer , NotifSerializer , AllNotifSerializer
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 

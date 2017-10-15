@@ -37,7 +37,7 @@ router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'products', views.ProductViewSet)
-router.register(r'stores', views.StoreViewSet)
+router.register(r'tables', views.TableViewSet)
 router.register(r'notifs', views.NotifViewSet)
 #router.register(r'notifs', views.AllNotifViewSet)
 
@@ -53,6 +53,7 @@ urlpatterns = [
     url(r'^reactions/', include('reactions.urls') ),
     url(r'^collections/', include('collection.urls' , namespace="collections") ),
     url(r'^discounts/', include('discount.urls') ),
+    url(r'^promote/', include('promote.urls') ),
     url(r'^admin/', admin.site.urls),
     url(r'^router/', include(router.urls)),
     url(r'^quickstart/', include('quickstart.urls')),

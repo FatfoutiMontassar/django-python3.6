@@ -31,9 +31,9 @@ def inbox(request):
         active_conversation = conversation['user'].username
         user = conversation['user']
 
-        for store in user.store_set.all():
-            #print store.name
-            for product in store.product_set.all():
+        for table in user.table_set.all():
+            #print table.name
+            for product in table.product_set.all():
                 products.append((product,getMainImage(product)))
 
 
@@ -44,9 +44,9 @@ def inbox(request):
             if conversation['user'].username == active_conversation:
                 conversation['unread'] = 0
 
-    for store in request.user.store_set.all():
-        #print store.name
-        for product in store.product_set.all():
+    for table in request.user.table_set.all():
+        #print table.name
+        for product in table.product_set.all():
             products.append((product,getMainImage(product)))
     #print "messages data type : "  + str(type(messages))
     newestMessages = []
@@ -88,15 +88,15 @@ def messages(request, username):
         print("not ok at all :p")
 
     print("other user ...")
-    for store in ouser.store_set.all():
-        #print store.name
-        for product in store.product_set.all():
+    for table in ouser.table_set.all():
+        #print table.name
+        for product in table.product_set.all():
             products.append((product,getMainImage(product)))
 
     print("connected user ...")
-    for store in request.user.store_set.all():
-        #print store.name
-        for product in store.product_set.all():
+    for table in request.user.table_set.all():
+        #print table.name
+        for product in table.product_set.all():
             products.append((product,getMainImage(product)))
 
     newestMessages = []
@@ -225,12 +225,12 @@ def get_products(request):
     ouser = User.objects.get(username=to)
     ret = []
 
-    for store in ouser.store_set.all():
-        for product in store.product_set.all():
+    for table in ouser.table_set.all():
+        for product in table.product_set.all():
             ret.append((product,getMainImage(product)))
 
-    for store in request.user.store_set.all():
-        for product in store.product_set.all():
+    for table in request.user.table_set.all():
+        for product in table.product_set.all():
             ret.append((product,getMainImage(product)))
 
     return render(request,'messenger/includes/products_list.html',

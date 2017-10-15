@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'discover.apps.DiscoverConfig',
     'notifications.apps.NotificationsConfig',
     'shop.apps.ShopConfig',
+    'promote.apps.PromoteConfig',
     'messenger.apps.MessengerConfig',
     'reactions.apps.ReactionsConfig',
     'collection.apps.CollectionConfig',

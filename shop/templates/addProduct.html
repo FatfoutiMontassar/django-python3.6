@@ -1,9 +1,9 @@
 {% include 'partials/header.html' %}
 
-<center><h4>Add Product To ** {{store.name}} **</h4></center>
+<center><h4>Add Product To ** {{table.name}} **</h4></center>
 
 <center>
-<form style="width:400px; background-color: #F8F8F8; margin-top:10px;" action="{% url 'addProduct' id=store.id %}" method="post">
+<form style="width:400px; background-color: #F8F8F8; margin-top:10px;" action="{% url 'addProduct' id=table.id %}" method="post">
 {% csrf_token %}
 
 	<input style="margin-top: 15px; width:370px;" type="text" name="name" id="name" placeholder="Name" /><br>

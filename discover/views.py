@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
-from shop.models import Product, Store, Contact, StoreImage, ProductMainImage, ProductSecImage , Trader
-from shop.forms import StoreForm, ProductForm, ContactForm, EditProductForm, StoreImageForm, addProductMainImageForm, \
+from shop.models import Product, Table, Contact, TableImage, ProductMainImage, ProductSecImage , Trader
+from shop.forms import TableForm, ProductForm, ContactForm, EditProductForm, TableImageForm, addProductMainImageForm, \
     productSImageForm , TraderForm
 from django.http import HttpResponse, Http404
 from collection.models import Collection
 from django.core.paginator import Paginator
+from reactions.models import Reaction
 from shop import views
 import re
 # Create your views here.
@@ -13,6 +14,7 @@ categoriesList = ["Vetement et accessoires", "Bijoux", "Founiture creatives", "M
 from django.shortcuts import get_object_or_404
 from authentication.models import Activity
 import math
+
 
 def getCountFromList(categorie, tab):
     ret = 0
@@ -58,19 +60,19 @@ def getRecs():
         if activity.product:
             if activity.product.get_image():
                 ret.append(activity.product.get_image())
-        elif activity.store:
-            if activity.store.get_image():
-                ret.append(activity.store.get_image())
+        elif activity.table:
+            if activity.table.get_image():
+                ret.append(activity.table.get_image())
         else:
             if activity.collection.image:
                 ret.append(activity.collection.image)
                 print(activity.collection.image)
 
-    for store in Store.objects.all():
+    for table in Table.objects.all():
         if len(ret) >= 2:
                 break
-        if store.get_image():
-            ret.append( store.get_image() )
+        if table.get_image():
+            ret.append( table.get_image() )
             
     return ret
 
@@ -147,9 +149,6 @@ def search(request):
     rec2 = rec[1]
     
     context = {
-        'rec1':rec1,
-        'rec2':rec2,
-        'result': reversed(result),
         'n': n,
         'input': str(srchFld),
         'Ptype':str(Ptype),
@@ -163,6 +162,9 @@ def search(request):
         'nC4': str(getCountFromList("Mariages", tab)),
         'nC5': str(getCountFromList("Maison", tab)),
         'nC6': str(getCountFromList("Enfant et bebe", tab)),
+        'rec1':rec1,
+        'rec2':rec2,
+        'result': reversed(result),
     }
     #print context['filters']
     #print "categorie id : " + context['idC']
@@ -174,7 +176,7 @@ def discover(request,idC="0",idP="1"):
     if not request.user.is_authenticated():
         return redirect('/authentication/login/')
 
-    recs = getRecs()
+    #recs = getRecs()
     '''
     for i in recs:
         print(type(i))
@@ -221,17 +223,27 @@ def discover(request,idC="0",idP="1"):
             else:
                 print("no discount ...")
 
-            liked  = False
-            smiled = False
-            wished = False
-            if(request.user in product.likes.all() ):
-                liked = True
-            if(request.user in product.smiles.all() ):
-                smiled = True
-            if(request.user in product.wishes.all() ):
-                wished = True
-            values.append((product, x,liked,smiled,wished,str(product.likes.count() + product.smiles.count() + product.wishes.count())))
+            normal = False 
+            smile  = False 
+            love   = False 
+            wish   = False 
+            if(Reaction.objects.filter(user=request.user,product=product,reaction_type='normal').count() > 0):
+                normal = True
 
+            if(Reaction.objects.filter(user=request.user,product=product,reaction_type='smile').count() > 0):
+                smile = True
+
+            if(Reaction.objects.filter(user=request.user,product=product,reaction_type='love').count() > 0):
+                love = True
+
+            if(Reaction.objects.filter(user=request.user,product=product,reaction_type='wish').count() > 0):
+                wish = True
+
+            ret = Reaction.objects.filter(product=product).count()
+
+            values.append((product, x,normal,smile,love,wish,str(ret)))
+
+    
     filters = "?Ptype="+str(Ptype)+"&Pmin="+str(Pmin)+"&Pmax="+str(Pmax)
 
     idList = []

@@ -134,12 +134,12 @@ overflow: auto;
           <input type="file" name="collectionImageInput" id="collectionImageInput" style="display:none;">
 
           <div style="margin-top:8px;">
-            <a class="btn" href="#popup1">Produits</a>
+            <a class="btn" href="#popup1"><strong>Produits</strong></a>
           </div>
           <div style="height:100px; border : 1px solid rgb(220,220,220) ; width:630px; margin-top:15px;">
           </div>
           <center>
-            <button id="preSubmitButton" style="margin-top:15px;">
+            <button id="preSubmitButton" style="margin-top:15px;" class="btn">
               <strong>Creer</strong>
             </button>
           </center>
@@ -157,10 +157,12 @@ overflow: auto;
             {% endif %}
           </div>
 
-          <button id="uploadCollectionImage" style="margin-top:50px;" class="btn">Ajouter</button>
+          <button id="uploadCollectionImage" style="margin-top:50px;" class="btn"><strong>Ajouter</strong></button>
         </center>
       </div>
     </div>
 
 </div>
+<script src="{% static 'js/collections.js' %}"></script>
+
 {% include 'partials/footer.html' %}

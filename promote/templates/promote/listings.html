@@ -1,0 +1,27 @@
+<div value="listings">
+<center>
+	<h4><strong>Hello from listings</strong></h4>
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Product/Collection</th>
+			<th>Start Time</th>
+			<th>End Time</th>
+		</tr>
+		{% for promote in promotes %}
+			<tr>
+				<td>{{promote.name}}</td>
+				{% if promote.product %}
+					<td><a href="/shop/product_details/{{promote.product.id}}/">{{promote.product.name}}</a></td>
+				{% elif promote.collection %}
+					<td><a href="/collections/view/{{promote.collection.id}}/">{{promote.collection.name}}</a></td>
+				{% else %}
+					<td>?</td>
+				{% endif %}
+				<td>{{promote.startTime}}</td>
+				<td>{{promote.endTime}}</td>
+			</tr>
+		{% endfor %}
+	</table>
+</center>
+</div>

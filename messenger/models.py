@@ -13,13 +13,13 @@ def rename(instance,name):
 
 @python_2_unicode_compatible
 class Message(models.Model):
-    user = models.ForeignKey(User, related_name='+')
-    message = models.TextField(max_length=1000, blank=True)
-    date = models.DateTimeField(auto_now_add=True)
-    conversation = models.ForeignKey(User, related_name='+')
-    from_user = models.ForeignKey(User, related_name='+')
-    is_read = models.BooleanField(default=False)
-    image = models.ImageField(null=True,upload_to=rename)
+    user            = models.ForeignKey(User, related_name='+')
+    message         = models.TextField(max_length=1000, blank=True)
+    date            = models.DateTimeField(auto_now_add=True)
+    conversation    = models.ForeignKey(User, related_name='+')
+    from_user       = models.ForeignKey(User, related_name='+')
+    is_read         = models.BooleanField(default=False)
+    image           = models.ImageField(null=True,upload_to=rename)
     relatedProducts = models.ManyToManyField(shop.models.Product,blank=True,related_name='relatedProducts')
 
     class Meta:
