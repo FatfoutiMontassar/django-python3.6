@@ -10,6 +10,7 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.all , name='allPromotes' ),
+	url(r'^save/$', views.save , name='redirect_save' ),
 	url(r'^redirectSettings/$', views.settings , name='redirect_settings' ),
 	url(r'^redirectInfo/$', views.info , name='redirect_info' ),
 	url(r'^redirectPayment/$', views.payment , name='redirect_payment' ),

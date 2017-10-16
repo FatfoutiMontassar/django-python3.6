@@ -39,6 +39,19 @@ def about(request):
 def options(request):
 	return render(request,'promote/options.html') 
 
+
+def save(request):
+	values   = request.POST.get('values')
+	products = request.POST.get('values')
+	values   = str(values).split('&')
+	products = str(products).split('&')
+	for product in products:
+		print(product,)
+	for value in values:
+		print(value,)
+	return HttpResponse() 
+
+
 def promote(request):
 	return render(request,'promote/promote.html')
 

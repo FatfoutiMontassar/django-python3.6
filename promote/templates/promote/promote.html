@@ -94,43 +94,102 @@ overflow: auto;
 		<center>
 		<strong style="font-size: 17px;">Solde : </strong>
 		<input type="number" name="budget" min="1" max="999999" style="width:210px;margin-bottom: 0px;" id="budget" />
-		<a onclick="distributeBudjet(); return false ;" class="btn" >Suivant</a>
+		<a onclick="previous(); return false ;" class="btn" ><strong>< Précedent</strong></a>
+		<a onclick="next(); return false ;" class="btn" ><strong>Suivant ></strong></a>
 		</center>
 		<br>
-		<div class="list-group" id="list-of-selected-products">
+		<div class="list-group" id="list-of-selected-products" >
 	        {% for table in user.table_set.all %}
 	        	{% for product in table.product_set.all %}
 			        <a class="list-group-item product" product-id="{{product.id}}" product-name="{{product.name}}" style="text-decoration:none;">
 			          <img src="/media/{{ product.get_image.img }}" class="conversation-portrait">
-			          {{product.name}}
+			          {{product.name}} : {{product.description}} ({{product.price}} Dt)
 			        </a>
 	        	{% endfor %}
 	        {% endfor %}
     	</div>
+    	<div class="list-group" id="list-of-chosen-products" >
+    	</div>
 </div>
 <script type="text/javascript">
+	var state = 0 ;
+	document.getElementById('list-of-chosen-products').style.display = 'none' ;
 	$(".list-group-item").click(function(){
 	    // this function will change the state of a product from non selected to selected ..
 	    // and the reverse operation
-	    id = $(this).attr('product-id') ;
-	    //alert("clicked .." + id)
+	    if($(this).hasClass('product')){
+		    id = $(this).attr('product-id') ;
+		    //alert("clicked .." + id)
 
-	    if($(this).hasClass('active')){
-	      $(this).removeClass();
-	      $(this).addClass('list-group-item').addClass('product') ;
-	    }else{
-	      $(this).addClass('active') ;
-	    }
+		    if($(this).hasClass('active')){
+		      $(this).removeClass();
+		      $(this).addClass('list-group-item').addClass('product') ;
+		    }else{
+		      $(this).addClass('active') ;
+		    }
+		}
   	});
-  	distributeBudjet = function(){
-  		var selectedProducts = "" ;
-  		$("#list-of-selected-products").children('a').each(function(){
-	      if($(this).hasClass('active')){
-	        product_id = $(this).attr("product-id")
-	        selectedProducts += (product_id + "&")
-	      }
-	    });
-  		alert(selectedProducts) ;
+  	next = function(){
+  		if(state == 0 ){
+	  		var x = document.getElementById('list-of-selected-products');
+	  		var y = document.getElementById('list-of-chosen-products');
+	  		x.style.display = 'none';
+	  		y.style.display = '' ;
+			var selectedProducts = [] ;
+			document.getElementById("list-of-chosen-products").innerHTML = "" ;
+			$("#list-of-selected-products").children('a').each(function(){
+		      if($(this).hasClass('active')){
+			    product_id = $(this).attr("product-id")
+			    selectedProducts.push(product_id) ;
+			    $(this).clone().appendTo("#list-of-chosen-products") ;
+		      }
+		    });
+		    $("#list-of-chosen-products").children('a').each(function(){
+			    	$(this).removeClass();
+		      		$(this).addClass('list-group-item') ;
+		      		$(this).append("<input type='number' name='percentage' style='float:right;height:100%;' min='1' max='100' value='1' />" );
+		    });	  		
+	  		//console.log(selectedProducts) ;
+	  		state++;
+  		}else{
+  			var products = "" ;
+  			var values   = "" ;
+  			var csrf  =  $("#mainSpan").attr('csrf')
+  			$("#list-of-chosen-products").children('a').each(function(){
+			    	product_id = $(this).attr("product-id");
+			    	percentage = $(this).find('input[name=percentage]').val() ;
+			  		products  += (product_id + "&") ;
+			  		values    += (percentage + "&") ;
+			    	//console.log(product_id,percentage) ;
+		    });
+		    console.log(products,values,csrf) ;
+		    $.ajax({
+		      url: '/promote/save/',
+		      data:{
+		        'csrfmiddlewaretoken': csrf,
+		        'products':products,
+		        'values':values,
+		      },
+		      cache: false,
+		      type:'post',
+		      success: function (data) {
+		        alert("success !!!");
+		        window.location = "/promote/";
+ 		      },
+		    });
+  		}	
+  		console.log(state) ;
+  	}
+  	previous = function(){
+  		if(state == 1){
+  			var x = document.getElementById('list-of-selected-products');
+	  		var y = document.getElementById('list-of-chosen-products');
+	  		x.style.display = '';
+	  		y.style.display = 'none' ;
+  			state--;
+  		}else{
+  			// do nothing !!
+  		}
   	}
 
 </script>
